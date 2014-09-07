@@ -1,0 +1,93 @@
+CREATE TABLE  `breesee_claim_req` (
+`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT NOT NULL ,
+`pid` INT NOT NULL ,
+`cid` INT NOT NULL ,
+`sub_date` DATE NOT NULL
+) ENGINE = MYISAM ;
+
+CREATE TABLE  `breesee_users` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`aud_uid` INT NOT NULL ,
+`cre_uid` INT NOT NULL ,
+`str_uid` INT NOT NULL ,
+`cre_cre_date` DATE NOT NULL ,
+`str_cre_date` DATE NOT NULL
+) ENGINE = MYISAM ;
+
+
+ 
+CREATE TABLE IF NOT EXISTS `breesee_feedback` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `oid` int(11) NOT NULL,
+  `uid` int(11) NOT NULL,
+  `vote` smallint(6) NOT NULL,
+  `comment` varchar(255) NOT NULL,
+  `fid` int(11) NOT NULL,
+  `fb_time` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `breesee_order_color` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `oid` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `color` varchar(10) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+CREATE TABLE IF NOT EXISTS `breesee_feedback_score` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `tot_pur` int(11) NOT NULL,
+  `score` float NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '1', '#000000');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '2', '#02028E');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '3', '#0303D1');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '4', '#0303D1');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '5', '#03A9E7');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '6', '#343497');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '7', '#349765');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '8', '#3667FC');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '9', '#636363');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '10', '#848282');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '11', '#969696');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '12', '#97C903');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '13', '#9ACBFD');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '14', '#C0C0C0');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '15', '#CB9AFD');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '16', '#CB9AFD');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '17', '#CCFECC');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '18', '#CCFEFE');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '19', '#DA0B09');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '20', '#EF0B83');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '21', '#F5FDCC');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '22', '#F8EF08');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '23', '#FB6603');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '24', '#FB9703');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '25', '#FBC903');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '26', '#FD9ACB');
+insert into  uc_color_attribute (aid, oid, hexValue) values (1, '27', '#FDFD9A');
+
+
+
+$query = "select country_name, country_id  from uc_countries";
+$query_result = db_query($query);
+while($row = db_fetch_object($query_result)) {
+	$country_name = ucfirst(strtolower($row->country_name));
+	$country_id  = $row->country_id;
+	db_query("update uc_countries SET  country_name = '$country_name' WHERE  country_id = '$country_id' ");
+}
+
+
+CREATE TABLE  `breesee_new`.`breesee_def_price` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`lac_id` INT NOT NULL ,
+`price` FLOAT NOT NULL
+) ENGINE = MYISAM ;

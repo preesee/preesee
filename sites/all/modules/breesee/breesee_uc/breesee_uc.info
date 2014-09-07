@@ -1,0 +1,8 @@
+; $Id: bresee_helper.info $
+name = Bresee Ubercart Alter
+description =  Bresee Ubercart Alter ..
+core = 6.x
+package = Breesee
+dependencies[] = breesee
+dependencies[] = uc_cart
+

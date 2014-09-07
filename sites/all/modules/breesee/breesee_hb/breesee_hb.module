@@ -1,0 +1,254 @@
+<?php
+
+// $Id: breesee_hb.module $
+/**
+**	
+*/
+
+function breesee_hb_perm() {
+	return array('access breesee_hb');
+}
+
+function breesee_hb_menu() {
+	$items = array();
+	$items['activityfiltyer']   = array(
+		'title' => 'Filtered Activity feed',
+		'page callback' => 'breesee_hb_activityfiltyer',
+		'access arguments' => array('access breesee_hb'),
+		'type' => MENU_CALLBACK
+	);
+	return $items;
+}
+
+
+function breesee_hb_activityfiltyer() {
+	$my_view_name = 'user_heartbeat_activit';
+	$my_display_name = 'display name';
+	$my_view = views_get_view($my_view_name);
+	if ( is_object($my_view) ) { 
+		$my_view->set_display($my_display_name);
+		$my_view->pre_execute();
+		print $my_view->render($my_display_name);
+	}
+}
+
+function breesee_hb_nodeapi(&$node, $op, $arg = 0) {
+  	global $user, $base_url;
+		if ($op == 'insert') {
+//		global $user;
+//		$uid = $user->uid;
+//		db_query("INSERT INTO facebook_status(sender, recipient, type, created, message, private) VALUES ('$uid', '$uid', 'user', now(), '".$node->title."', 0) ");
+		
+		switch($node->type) { 
+		case 'creations':
+			$message_id = 'heartbeat_add_node';
+			$user_name = _breesee_get_display_name($user->uid);
+			$file_path = $node->field_upload[0]['filepath'];
+			$html = '<div class="login_activity_favorite_block">
+												<div class="login_activity_favorite_block_sub">
+									Category field					<h1>'.$user_name.' has added '.$node->title.' to Cration Portfolio</h1>
+															<ul>
+																<li><a href="'.$base_url.'/'.drupal_get_path_alias('user/'.$user->uid).'">'.theme('imagecache', 'product_add_thumbnail', $user->picture).'</a></li>
+																<li><a href="'.$base_url.'/setajaxdetail/'.$node->nid.'">'.theme('imagecache', 'product_add_thumbnail', $file_path).'</a></li>
+															</ul>
+													</div>
+											</div>';
+				$variables = array(
+					'@username' => l(heartbeat_user_load($user->uid)->name, 'user/' . $user->uid),
+					'@node_type' => 'Creation',
+					'@node_title' => l($node->title, 'node/' . $node->nid),
+					'@themeddata' => $html,
+					'time' => strtotime("now"),
+				);
+				break;
+		case 'blog':
+			$message_id = 'heartbeat_add_node';
+			$user_name = _breesee_get_display_name($user->uid);
+			//$file_path = $node->field_image_cache[0]['filepath'];
+			$alter = array('html' => TRUE, 'word_boundary'=> TRUE, 'max_length' => 150);
+			$html = '<div class="login_activity_favorite_block blogadded">
+												<div class="login_activity_favorite_block_sub">
+														<h1>'.$user_name.' has added new Blog '.$node->title.'</h1>
+															<ul>
+																<li><a href="'.$base_url.'/'.drupal_get_path_alias('user/'.$user->uid).'">'.theme('imagecache', 'product_add_thumbnail', $user->picture).'</a></li>
+																<li class="bogcontentli">'.views_trim_text($alter, $node->body).'</li>
+																<li class="blgread"><a href="'.$base_url.'/'.drupal_get_path_alias('node/'.$node->nid).'">More...</a></li>
+															</ul>
+													</div>
+											</div>';
+				$variables = array(
+					'@username' => l(heartbeat_user_load($user->uid)->name, 'user/' . $user->uid),
+					'@node_type' => 'Blog',
+					'@node_title' => l($node->title, 'node/' . $node->nid),
+					'@themeddata' => $html,
+					'time' => strtotime("now"),
+				);
+				break;
+				
+			case 'creations':
+			$message_id = 'heartbeat_add_node';
+			$user_name = _breesee_get_display_name($user->uid);
+			$file_path = $node->field_upload[0]['filepath'];
+			$html = '<div class="login_activity_favorite_block">
+												<div class="login_activity_favorite_block_sub">
+														<h1>'.$user_name.' has Edited '.$node->title.' in Cration Portfolio</h1>
+															<ul>
+																<li><a href="'.$base_url.'/'.drupal_get_path_alias('user/'.$user->uid).'">'.theme('imagecache', 'product_add_thumbnail', $user->picture).'</a></li>
+																<li><a href="'.$base_url.'/setajaxdetail/'.$node->nid.'">'.theme('imagecache', 'product_add_thumbnail', $file_path).'</a></li>
+															</ul>
+													</div>
+											</div>';
+				$variables = array(
+					'@username' => l(heartbeat_user_load($user->uid)->name, 'user/' . $user->uid),
+					'@node_type' => 'Creation',
+					'@node_title' => l($node->title, 'node/' . $node->nid),
+					'@themeddata' => $html,
+					'time' => strtotime("now"),
+				);
+				break;
+		}
+		heartbeat_api_log($message_id, $node->uid, 0, $node->nid, 0, $variables);
+
+  }
+	
+	else if($op == 'update') {
+		switch($node->type) { 
+		case 'blog':
+			db_query("DELETE FROM heartbeat_activity WHERE nid = ". $node->nid);
+			$node->pathauto_perform_alias = TRUE;
+			$message_id = 'heartbeat_add_node';
+			$user_name = _breesee_get_display_name($user->uid);
+			//$file_path = $node->field_image_cache[0]['filepath'];
+			$alter = array('html' => TRUE, 'word_boundary'=> TRUE, 'max_length' => 150);
+			$html = '<div class="login_activity_favorite_block blogadded">
+												<div class="login_activity_favorite_block_sub">
+														<h1>'.$user_name.' has Updated Blog '.$node->title.'</h1>
+															<ul>
+																<li><a href="'.$base_url.'/'.drupal_get_path_alias('user/'.$user->uid).'">'.theme('imagecache', 'product_add_thumbnail', $user->picture).'</a></li>
+																<li class="bogcontentli">'.views_trim_text($alter, $node->body).'</li>
+																<li class="blgread"><a href="'.$base_url.'/'.drupal_get_path_alias('node/'.$node->nid).'">More...</a></li>
+															</ul>
+													</div>
+											</div>';
+				$variables = array(
+					'@username' => l(heartbeat_user_load($user->uid)->name, 'user/' . $user->uid),
+					'@node_type' => 'Blog',
+					'@node_title' => l($node->title, 'node/' . $node->nid),
+					'@themeddata' => $html,
+					'time' => strtotime("now"),
+				);
+				break;
+			}	
+			heartbeat_api_log($message_id, $node->uid, 0, $node->nid, 0, $variables);
+	}
+}
+
+
+function breesee_hb_uc_checkout_complete($order, $account) {
+	global $user, $base_url;
+	$message_id = 'heartbeat_uc_product_purhase';
+	$html = '<div class="creator_login_favorate myownprodshowsd"><div class="creator_login_favorate_sub1">
+                        	<ul>
+                            	<li class="favorate_date">Date</li>
+                              <li class="favorate_discription">Description</li>
+                              <li class="favorate_activity">Activity Type</li>
+                              <li class="favorate_fees">Fees</li>
+                            </ul>';
+	foreach ($order->products as $product) {
+		$node = node_load($product->nid);
+		$file_path = $node->field_image_cache[0]['filepath'];
+		$timestamp = $order->created;
+		$dispdate = format_date($timestamp, 'custom', 'M d', $timezone, "en");
+		$html .= ' <div class="creator_favorate_block">
+																<ul>
+																	<li class="favorate_date1">'.$dispdate.'</li>
+																	<li class="favorate_date2"><a href="'.$base_url.'/'.drupal_get_path_alias('node/'.$product->nid).'">'.theme('imagecache', 'activity_product', $file_path).'</a>
+																		<h3>'.BreeseeUK_taxonomy_links($node, '17').'</h3>
+																	</li>
+																	<li class="favorate_date4">Selling</li>
+																	<li class="favorate_date5">'.$order->order_total.' USD</li>
+																</ul></div>';
+	}
+	$html .=  '</div></div>';
+	$variables = array(
+				'@username' => l(heartbeat_user_load($order->uid)->name, 'user/' . $order->uid),
+				'@node_type' => 'Product',
+				'@node_title' => l($node->title, 'node/' . $node->nid),
+				'@themeddata' => $html,
+				'time' => $order->created,
+			);
+	heartbeat_api_log($message_id, $user->uid, 0, $node->nid, 0, $variables);
+}
+
+function _breesee_hb_favorited($node) {
+		global $user, $base_url;
+		$message_id = 'heartbeat_favorite_added';
+		$user_name = _breesee_get_display_name($user->uid);
+		$file_path = $node->field_image_cache[0]['filepath'];
+		$html = '<div class="login_activity_favorite_block">
+                    	<div class="login_activity_favorite_block_sub">
+                        	<h1>'.$node->title.' is '.$user_name.'&rsquo; Favorite now</h1>
+                            <ul>
+                            	<li><a href="'.$base_url.'/'.drupal_get_path_alias('node/'.$node->nid).'">'.theme('imagecache', 'product_add_thumbnail', $file_path).'</a></li>
+                              <li><a href="'.$base_url.'/'.drupal_get_path_alias('user/'.$user->uid).'">'.theme('imagecache', 'product_add_thumbnail', $user->picture).'</a></li>
+                            </ul>
+                        </div>
+                    </div>';
+			$variables = array(
+				'@username' => l(heartbeat_user_load($user->uid)->name, 'user/' . $user->uid),
+				'@node_type' => 'Product',
+				'@node_title' => l($node->title, 'node/' . $node->nid),
+				'@themeddata' => $html,
+				'time' => strtotime("now"),
+			);
+			heartbeat_api_log($message_id, $user->uid, 0, $node->nid, 0, $variables);
+}
+
+
+//function breesee_hb_facebook_status_save($status, $context, $edit, $options) {
+//  if ($edit) {
+//    //drupal_set_message(t('The status message has been saved.'));
+//  }
+//  else {
+//		global $user;
+//		$message_id = 'heartbeat_fb_wall_post';
+//		$html = facebook_status_show($status, $options = array());
+//		$html .= '<div class="clear"></div>';
+//		$variables = array(
+//				'@username' => l(heartbeat_user_load($user->uid)->name, 'user/' . $user->uid),
+//				'@node_type' => 'Wall Post',
+//				'@node_title' => l($node->title, 'node/' . $node->nid),
+//				'@fbsid' => $status->sid,
+//				'time' => strtotime("now"),
+//			);
+//		heartbeat_api_log($message_id, $user->uid, 0, $node->nid, 0, $variables);
+//  }
+//}
+
+
+function _breesee_hb_logto_stram($being_followed) {
+	global $user, $base_url;
+	$user2 = user_load($being_followed);
+	$html = '<div class="login_activity_favorite_block ">
+             <div class="login_activity_favorite_block_sub morewidth">
+             <h1>'._breesee_get_display_name($user->uid).' Starts Following '._breesee_get_display_name($user2->uid).'</h1>
+             <ul>
+             	<li><a href="'.$base_url.'/'.drupal_get_path_alias('user/'.$user->uid).'">'.theme('imagecache', 'product_add_thumbnail', $user->picture).'</a></li>
+							<li><img src="'.$base_url.'/sites/all/themes/BreeseeUK/images/Creator-LoginActivity/creator_image.png"></li>
+              <li><a href="'.$base_url.'/'.drupal_get_path_alias('user/'.$user2->uid).'">'.theme('imagecache', 'product_add_thumbnail', $user2->picture).'</a></li>
+            </ul>
+            </div>
+          </div>';
+	$message_id = 'heartbeat_become_frends';
+	$variables = array(
+				'@username' => l(heartbeat_user_load($user->uid)->name, 'user/' . $user->uid),
+				'@node_type' => 'Became Friends',
+				'@node_title' => '',
+				'@themeddata' => $html,
+				'time' => strtotime("now"),
+			);
+		$uid = $user->uid;
+		$uid_target = $user2->uid;
+		heartbeat_api_log($message_id, $uid, $uid_target, $nid = 0, $nid_target = 0, $variables);
+		
+}

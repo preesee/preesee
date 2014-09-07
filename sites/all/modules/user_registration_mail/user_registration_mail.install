@@ -1,0 +1,15 @@
+<?php // $Id: user_registration_mail.install,v 1.1 2011/02/08 00:01:15 newzeal Exp $
+
+/**
+ * @file
+ * Install hooks for user_registration_mail.module.
+ */
+
+
+function user_registration_mail_install() {
+  drupal_set_message(t('Contratulations.  You have installed the User Registration Email module which enables different registration emails per role'));
+}
+
+function user_registration_mail_uninstall() {
+  db_query("DELETE FROM {variable} WHERE name LIKE 'user_registration_email%'");
+}

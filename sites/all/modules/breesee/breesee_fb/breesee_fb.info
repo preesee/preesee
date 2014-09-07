@@ -1,0 +1,6 @@
+; $Id: breesee_fb.info $
+name = Bresee Facebook connect
+description = Bresee Facebook connect
+core = 6.x
+package = Breesee
+dependencies[] = breesee

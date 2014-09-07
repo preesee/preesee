@@ -1,0 +1,12 @@
+; $Id: 
+name = Registration Role With Approval
+description = Allows admin to selec which roles will be available to users on registration form and to set which roles needs admin approval.
+core = 6.x
+
+
+; Information added by drupal.org packaging script on 2010-02-03
+version = "6.x-1.1"
+core = "6.x"
+project = "registration_role_with_approval"
+datestamp = "1265189409"
+

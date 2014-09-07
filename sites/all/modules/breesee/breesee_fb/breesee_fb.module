@@ -1,0 +1,134 @@
+<?php
+
+// $Id: breesee_fb.module $
+/**
+**	
+*/
+
+function breesee_fb_perm() {
+	return array('access breesee_fb', 'administer breesee_fb');
+}
+
+function breesee_fb_menu() {
+	$items = array();
+	$items['fb_signup']   = array(
+		'title' => 'Sign up With facebook',
+		'page callback' => 'breesee_fb_signup',
+		'access arguments' => array('access breesee_fb'),
+		'type' => MENU_CALLBACK
+	);
+	$items['admin/breesee/bfbapp'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('bresee_fb_fbapp_config'),
+		'title' => 'Facebook Application',
+		'description' => 'Facebook Application',
+		'access arguments' => array('administer breesee_fb'),
+		'type' => MENU_NORMAL_ITEM,
+	);
+	return $items;
+}
+
+
+function bresee_fb_fbapp_config() {
+	$form['fbappid']=array(
+		'#type' => 'textfield',
+		'#title' => t('App ID'),
+		'#default_value' => variable_get('fbappid','230590756980626'),
+	);
+	$form['fbappsecret']=array(
+		'#type' => 'textfield',
+		'#title' => t('App Secret'),
+		'#default_value' => variable_get('fbappsecret','b0e38f462aeae8fb7ee5715cd4748a7b'),
+	);
+	return system_settings_form($form);
+}
+
+function breesee_fb_signup() {
+	module_load_include('php', 'breesee_fb', 'facebook');
+  $config = array();
+	global $base_url;
+  $config['appId'] = variable_get('fbappid', '300412483359298');
+  $config['secret'] = variable_get('fbappsecret','40349843c8a23aa341b5bc79a77aa464');
+  $config['fileUpload'] = false; // optional
+  $facebook = new Facebook($config);
+	$user_id = $facebook->getUser();
+	$user_profile = $facebook->api('/me','GET');
+	if($user_id) { 
+		$sql = "SELECT COUNT(*) FROM users WHERE name = '".$user_profile['email']."' AND pass = '".md5($user_profile['id'])."'";
+		$cnt = db_result(db_query($sql));
+		if($cnt == 0 ) { 
+			include_once './includes/bootstrap.inc';
+			drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+			
+			 $img = drupal_http_request('http://graph.facebook.com/'.$user_profile['id'].'/picture');
+			 $file = $base_url.'/sites/default/pictures/'.$user_profile['id'].'.jpg';
+			 $filename = 'sites/default/pictures/'.$user_profile['id'].'.jpg';
+			 file_put_contents($file, $img);
+			 
+			$roles = array('2' =>'authenticated user', '4' =>'audience');
+			$userinfo = array(
+				'name' => $user_profile['email'],
+				'init' => $user_profile['email'],
+				'mail' => $user_profile['email'],
+				'pass' => $user_profile['id'],
+				'status' => 1,
+				'roles' => $roles, 
+				'picture' => $filename,
+			);
+			$account = user_save('', $userinfo);
+			if (!$account) {
+				drupal_set_message("Error saving user account!");
+				drupal_goto();
+			}
+			else {
+				$params = array(
+					'mail'   => $user_profile['email'],
+					'name'   => $user_profile['email'],
+					'pass'   => $user_profile['id'],
+					'status' => 1, 
+				);
+				$account = user_authenticate($params);
+				global $user;
+				$aud_node = new StdClass();
+				$aud_node->type = 'audience';
+				$aud_node->status = 1;
+				$aud_node->uid = $user->uid;
+				$aud_node->language = 'en';
+				$aud_node->validated = TRUE;
+				$aud_node->promote = 0;
+				$aud_node->sticky = 0;
+				$aud_node->format = 1;
+				$aud_node->is_new = 1;
+				$aud_node->title = $user_profile['email'];
+				$aud_node->field_fname[0]['value'] = $user_profile['first_name'];
+				$aud_node->field_lname[0]['value'] = $user_profile['last_name'];
+				if($user_profile['location'] != '') {
+					$location = explode (',', $user_profile['location']['name']);
+					$aud_node->field_city[0]['value'] = $location[0];
+				}
+				node_submit($aud_node);			
+				node_save($aud_node);
+				
+				drupal_set_message("Welcome to Breesee!");
+				drupal_goto('user/home');
+			}
+		}
+		else {
+			$params = array(
+				'mail'   => $user_profile['email'],
+				'name'   => $user_profile['email'],
+				'pass'   => $user_profile['id'],
+				'status' => 1, 
+			);
+			$account = user_authenticate($params);
+			drupal_set_message("Login Successfull");
+			drupal_goto('user/home');
+		}
+	}
+	else {
+		drupal_set_message("Invalid Facebook Profile Please Recheck ");
+		drupal_goto();
+	}
+	
+
+}

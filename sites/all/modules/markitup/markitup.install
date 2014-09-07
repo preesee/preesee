@@ -1,0 +1,59 @@
+<?php
+// $Id: 
+
+/**
+ * @file
+ * markItUp module install file.
+ */
+/**
+ * Implementation of hook_schema().
+ *
+ * Note that we're not actually using this schema anymore, but keeping it around
+ * so it can be uninstalled by markitup_update_6300() below.
+ */
+function markitup_schema() {
+  $schema['markitup_editors'] = array(
+    'fields' => array(
+      'meid'         => array('type' => 'serial', 'not null' => TRUE, 'description' => t('Primary Key: A unique ID for a markItUp editor configuration.')),
+      'name'         => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => '', 'description' => t('The name for this markItUp editor configuration.')),
+      'miu_set'          => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => '', 'description' => t('The markItUp set defined for this markItUp editor configuration.')),
+      'skin'         => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => '', 'description' => t('The markItUp skin defined for this markItUp editor configuration.')),
+      'description'  => array('type' => 'text', 'size' => 'medium', 'not null' => TRUE),
+    ),
+    'primary key' => array('meid'),
+  );
+  $schema['markitup_editors_formats'] = array(
+    'fields' => array(
+      'meid'         => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'description' => t('Composite Key from foreign key: The unique ID for a markItUp editor configuration.')),
+      'format'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'description' => t('Composite Key from foreign key: The {filter_formats}.format configuration of filters.')),
+    ),
+    'primary key' => array('meid', 'format'),
+  );
+  return $schema;
+}
+
+/**
+ * Implementation of hook_install().
+ */
+
+
+/**
+ * Implementation of hook_uninstall().
+ */
+
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Remove old database and variables
+ */
+function markitup_update_6300() {
+  drupal_uninstall_schema('markitup');
+  global $conf;
+  foreach (array_keys($conf) as $key) {
+    if (strpos($key, 'markitup_') === 0) {
+      variable_del($key);
+    }
+  }
+  return array();
+}

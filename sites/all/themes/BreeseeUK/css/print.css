@@ -1,0 +1,320 @@
+.warning #username-check-wrapper #edit-name-wrapper  #edit-name{
+    background: none repeat scroll 0 0 #FFFFFF !important;
+    border: 1px solid #8C8C8C !important;
+    height: 22px !important;
+    margin: 0 0 10px !important;
+    width: 382px !important;
+}
+.store_second_rightfields .form-text required text {
+background: none repeat scroll 0 0 #FFFFFF !important;
+    border: 1px solid #8C8C8C;
+    height: 21px !important;
+    width: 474px !important;
+}
+.hierarchical-select-wrapper .hierarchical-select select, .hierarchical-select-wrapper .hierarchical-select .add-to-dropbox, .hierarchical-select-wrapper .hierarchical-select .create-new-item {
+    background: none repeat scroll 0 0 #FFFFFF !important ;
+    border: 1px solid #8C8C8C !important;
+    height: 21px !important;
+    width: 261px !important;
+}
+#storstepone .main_container .steps_coverdiv .warning{
+background: none repeat scroll 0 0 #F5F6F7 !important;
+    padding: 10px !important;
+    width: 470px !important;
+	border:none!important;
+}
+.user_regi_step1_wrapper .hierarchical-select-wrapper .hierarchical-select select, .hierarchical-select-wrapper .user_regi_step1_wrapper .hierarchical-select .add-to-dropbox, .hierarchical-select-wrapper .hierarchical-select .create-new-item {
+  border: 1px solid #8C8C8C !important;
+    color: #999999 !important;
+    font: 11px Arial,Helvetica,sans-serif !important;
+    height: 23px !important;
+    width: 233px !important ;
+}
+.user_regi_step1_wrapper .form-item {
+    margin-bottom: 0em;
+    margin-top: 0em;
+}
+.user_regi_step1_wrapper .password-parent {
+    margin: 0 .name_step1 
+    color: #55A4F2;
+    font: 12px Arial,Helvetica,sans-serif;
+    letter-spacing: 0.2px;
+    padding: 3px 10px 0 0;
+    text-align: left;
+    width: 172px;
+}
+
+.tore_field_steps .tips {
+    display: none !important;
+    
+}
+.form-item .description {
+    display: none !important;
+}
+.tips {
+display:none !important;
+}
+.upgrade_to_store .resizable-textarea #edit-field-about-0-value{
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #8C8C8C;
+    height: 129px !important;
+    margin: 0 0 0 14px !important;
+    width: 473px !important;
+}
+.resizable-textarea .grippie {
+    display:none !important;
+}
+.cover_btn_sub{
+	background: url("../images/user_regi_step1/join_breesee.jpg") no-repeat scroll left top transparent;
+    display: block;
+    font: bold 15.68px Arial,Helvetica,sans-serif;
+    height: 55px;
+    margin: 6px 0 22px 183px;
+    padding: 4px 0 0 0px;
+    width: 205px;
+}
+.join_breez {
+	color: #FFFFFF !important;
+	background:none;
+	font: bold 15.68px Arial,Helvetica,sans-serif !important;
+	height: 44px !important;
+	width: 185px !important;
+	padding: 0 43px 3px 1px;
+	border:0 none !important;
+	cursor:pointer;
+}
+.upgrade_to_store .warning {
+    background: none repeat scroll 0 0 #F5F6F7;
+    padding: 10px;
+    width: 470px;
+}
+.upgrade_to_store #edit-title {
+    width: 382px !important;
+}
+.upgrade_to_store input[type="text"] {
+    background: none repeat scroll 0 0 #FFFFFF !important;
+    border: 1px solid #8C8C8C !important;
+    height: 22px !important;
+    margin: 0 0 10px !important;
+	width: 261px !important;
+}
+.upgrade_to_store .warning p {
+    color: #5D5D5D;
+    font: 10px Arial,Helvetica,sans-serif;
+    padding: 5px 0 0;
+}
+.upgrade_to_store .warning h2 a {
+    color: #55A4F2;
+    font: bold 12px Arial,Helvetica,sans-serif;
+    letter-spacing: 0.25px;
+}
+
+.upgrade_to_store .form-item label {
+    display: none;
+}
+.upgrade_to_store select {
+    background: none repeat scroll 0 0 #FFFFFF !important;
+    border: 1px solid #8C8C8C !important;
+    height: 21px !important;
+    width: 261px !important;
+}
+.upgrade_to_store .grippie {
+	display:none;
+}
+.storecoverdiv .forms_steps{
+   margin:-21px 0 6px;
+}
+.storecoverdiv h6 {
+   padding: 26px 0 31px;
+}
+.store_registration_step2 .resizable-textarea textarea{
+    border: 1px solid #E5E5E5 !important;
+    height: 138px;
+    margin: 0 0 10px !important;
+    width: 557px !important;
+}
+.step2_cover_div .resizable-textarea textarea {
+    border: 1px solid #D9D9D9 !important;
+    height: 90px !important;
+    margin: 0 0 0 18px !important;
+    width: 367px !important;
+}
+
+img_uploader1 p b {
+    color: #EC008C;
+    display: block;
+    float: left;
+    font: 18px Arial,Helvetica,sans-serif;
+    height: 10px;
+    width: 10px;
+}
+.store_second_rightfields b {
+    color: #EC008C !important;
+    font: 11px Arial,Helvetica,sans-serif !important ;
+    left: -8px !important;
+    position: relative !important;
+    top: 12px !important;
+}
+.storecoverdiv .hierarchical-select .selects {
+    float: left;
+    width: 2px;
+}
+#stepone .materials_box #edit-field-materials-0-value{
+     border: 1px solid #999999 ;
+    height: 136px ;
+    margin: 12px 0 17px 9px ;
+    width: 668px;
+}
+#stepone .product_story_box #edit-field-product-story-0-value{
+    border: 1px solid #999999 ;
+    height: 193px;
+    margin: 9px 0 16px 10px ;
+    width: 668px;
+}
+#stepone .item_info_box #edit-body{
+    border: 1px solid #8C8C8C ;
+    height: 431px;
+    margin: 13px 0 0 10px;
+    width: 668px;
+}
+#stepone .item_info_text_box #edit-title{
+    border: 1px solid #8C8C8C;
+    height: 25px;
+    margin: 0 0 12px 10px;
+    width: 668px;
+}
+#stepone .item_info_text_box #edit-taxonomy-14{
+    border: 1px solid #8C8C8C;
+    height: 21px ;
+    margin: 14px 0 0 12px;
+    width: 161px;
+}
+
+#steptwo .resizable-textarea #edit-field-surf-0-value{
+border: 1px solid #8C8C8C ;
+    color: #A0A0A0;
+    font: 11px Arial,Helvetica,sans-serif;
+    height: 62px;
+    margin: 14px 0 5px 4px;
+    resize: none;
+    width: 224px;
+}
+#steptwo #edit-field-buyer-0-value-wrapper #edit-field-buyer-0-value {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #8C8C8C;
+    height: 24px;
+    margin: 15px 0 0;
+    width: 228px;
+}
+#steptwo #edit-taxonomy-17-wrapper #edit-taxonomy-17{
+    background: none repeat scroll 0 0 #FFFFFF  ;
+    border: 1px solid #8C8C8C;
+    height: 24px;
+    margin: 0 0 0 8px;
+    width: 164px;
+}
+#steptwo #edit-taxonomy-9-wrapper #edit-taxonomy-9{
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #8C8C8C;
+    height: 20px;
+    left: -130px;
+	top: 21px;
+    width: 164px;
+	margin: 0 0 0 19px;
+}
+#steptwo .categories_tag b {
+    float: left;
+    font-weight: bold;
+}
+#stepone .browse_upload{
+margin:1px;
+}
+#steptwo .original_product_show h2 {
+    color: #000000;
+    font: bold 16px/9px Verdana,Arial,Helvetica,sans-serif;
+    margin: 10px 5px 0 !important;
+}
+#stepone .form-item {
+    margin: 0;
+    overflow: hidden !important;
+    padding: 0;
+}
+
+
+.divimage {
+    margin:1px;
+}
+.left_step1_sub {
+    overflow: hidden;
+}
+.left_step1_sub span {
+    display: block;
+    float: left;
+}
+.password-strength .error{
+    border: 0 !important;
+}
+.product_discription .resizable-textarea #edit-field-product-story-0-value_parent #edit-field-product-story-0-value_tbl{
+    border: 1px solid #999999 !important;
+    height: 193px !important;
+    margin: 9px 0 16px 10px !important;
+    width: 672px !important;
+}
+.resizable-textarea #edit-field-product-story-0-value_tbl{
+    border: 1px solid #999999 !important;
+    height: 193px !important;
+    margin: 9px 0 16px 10px !important;
+    width: 672px !important;
+    
+}
+.materials_box #edit-field-surf-0-value_parent  #edit-field-surf-0-value_tbl{
+    border: 1px solid #8C8C8C !important;
+    color: #A0A0A0 !important;
+    font: 11px Arial,Helvetica,sans-serif !important;
+    height: 62px !important;
+    margin: 0 0 5px 4px !important;
+    resize: none !important;
+    width: 224px !important;
+}
+.materials_box .resizable-textarea #edit-field-materials-0-value_tbl{
+    border: 1px solid #999999 !important;
+    height: 136px !important;
+    margin: 12px 0 17px 9px !important;
+    width: 672px !important;
+}
+.user_regi_step1_wrapper .left_step1 span {
+    display: block ;
+    float: left;
+    width: 172px;
+}
+.price_strip1 #edit-sell-price {
+    border: 1px solid #8C8C8C;
+    height: 22px;
+    width: 106px;
+}
+.price_strip1 #edit-taxonomy-19{
+    border: 1px solid #8C8C8C;
+    height: 22px;
+    width: 106px;
+	margin:0px 5px 0px;
+}
+.left_price2 #edit-default-qty{
+    border: 1px solid #8C8C8C;
+    height: 22px;
+    width: 106px;
+}
+.left_price2 {
+    float: left;
+    width: 250px
+}
+.reg_submit_button{
+    background:url(../images/city_store_login_sellnow02a/next_tag.jpg);
+	background-repeat: no-repeat;
+    border: none;
+    width: 79px;
+    height: 28px;
+}
+.mceStatusbar {
+display: none !important;
+}
+

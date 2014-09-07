@@ -1,0 +1,8 @@
+; $Id: emaillogin.info $
+name = Login with Email
+description = Breese Login with Email..
+core = 6.x
+package = Breesee
+dependencies[] = breesee
+
+

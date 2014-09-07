@@ -1,0 +1,369 @@
+<?php
+
+// $Id: breesee_uc.module $
+/**
+**	
+*/
+
+
+function breesee_uc_perm() {
+	return array('access breesee_uc',);
+}
+
+function breesee_uc_order($op, &$arg1, $arg2) {
+	if($op == 'delete'){
+		db_query("DELETE FROM breesee_feedback WHERE oid = ".$arg1->order_id);
+		db_query("DELETE FROM breesee_payment_history WHERE oder_id = ".$arg1->order_id);
+		drupal_set_message('Feedback Associated with Order #'.$arg1->order_id." Deleted");
+	}
+	
+}
+
+
+
+function breesee_uc_menu() {
+  $items['add_moreshoiptos'] = array(
+		'title' => 'Add Shipping Location',
+		'page callback' => 'add_moreshoiptos_form',
+		'access arguments' => array('breesee store' ),
+		'type' => MENU_CALLBACK
+  );
+	return $items;
+}
+
+
+function breesee_uc_uc_checkout_complete($order, $account) {
+	$i=0;
+	global $user;
+	$uid = $user->uid;
+//  print_r($order);
+//	die;
+	
+	      $products = $order->products;
+        $flag = FALSE;
+        foreach ($products as $product) {
+          $uid = db_result(db_query('SELECT uid FROM {node} WHERE nid = %d', $product->nid));
+          if (db_result(db_query('SELECT COUNT(*) FROM {mp_seller_order_statuses} WHERE uid = %d AND order_id = %d', $uid, $order->order_id)) == 0) {
+            db_query('INSERT INTO {mp_seller_order_statuses} (uid,order_id,order_status,seller_paid_status) VALUES (%d,%d,"complete","0")', $uid, $order->order_id);
+            $flag = TRUE;
+          }
+          if ($flag && (db_result(db_query('SELECT shippable FROM {uc_products} WHERE nid = %d', $product->nid)) == 1)) {
+            db_query('UPDATE {mp_seller_order_statuses} SET order_status = "not complete" WHERE order_id = %d AND uid = %d', $order->order_id, $uid);
+          }
+        }
+	
+	
+	$old_oid = $order->order_id;
+	$nooford = count($order->products);
+	if($order->products > 1 ) {
+		foreach($order->products as $product) {
+			$new_order = uc_order_new($order->uid);
+			$new_order_clone = drupal_clone($order);
+			$product->order_id = $new_order->order_id;
+			$new_order_clone->order_id = $new_order->order_id;
+			$new_order_clone->products = array();
+			$new_order_clone->products[] = $product;
+			$new_order_clone->order_status = 'pending';
+			uc_order_save($new_order_clone);
+			$amt = $order->order_total / $nooford;
+			make_entrytopayment_table($new_order_clone->order_id, $product->nid, $amt);
+			_breesee_uc_init_pm($new_order_clone->order_id, 'purchase');
+			$i++;
+		}
+	uc_order_delete($old_oid); 
+	}
+	else 
+	make_entrytopayment_table($order->order_id, $order->products[0]->nid, $order->order_total);
+	
+	//die;
+	
+}
+
+
+function _breesee_uc_init_pm($oid, $state) {
+	global $user;
+	switch($state) {
+		case 'ship':
+			$order = uc_order_load($oid);
+			$recipients = user_load($order->uid);
+			$mixedsub = variable_get('ordershippedhead','');
+			$mixedbody = variable_get('ordershippedbody','');
+			$sender_name = _breesee_get_display_name($user->uid);
+			$buyer_name = _breesee_get_display_name($order->uid);
+			$title = $order->products[0]->title;
+			$nid = $order->products[0]->nid;
+			$link = l($title, drupal_get_path_alias('node/' . $nid));
+			$healthy = array("!seller", "!buyer", "!breeseeadmin", "!product");
+			$yummy   = array($sender_name, $buyer_name, "Breesee", $link);
+			$subject = str_replace($healthy, $yummy, $mixedsub);
+			$body = str_replace($healthy, $yummy, $mixedbody);
+			$sender =  $user;
+			privatemsg_new_thread(array($recipients), $subject, $body, array('author' => $sender));
+			break;
+		case 'complete':
+			$order = uc_order_load($oid);
+			$recipients = user_load($order->uid);
+			$mixedsub = variable_get('ordercompletebackhd','');
+			$mixedbody = variable_get('ordercompletebody','');
+			$sender_name = _breesee_get_display_name($user->uid);
+			$buyer_name = _breesee_get_display_name($order->uid);
+			$title = $order->products[0]->title;
+			$nid = $order->products[0]->nid;
+			$link = l($title, drupal_get_path_alias('node/' . $nid));
+			$healthy = array("!seller", "!buyer", "!breeseeadmin", "!product");
+			$yummy   = array($sender_name, $buyer_name, "Breesee", $link);
+			$subject = str_replace($healthy, $yummy, $mixedsub);
+			$body = str_replace($healthy, $yummy, $mixedbody);
+			$sender =  $user;
+			privatemsg_new_thread(array($recipients), $subject, $body, array('author' => $sender));
+			break;
+		case 'seller':
+		case 'buyer':
+			$order = uc_order_load($oid);
+			$recipients = user_load($order->uid);
+			$mixedsub = variable_get('awaitingfeedbackhd','');
+			$mixedbody = variable_get('awaitingfeedbackdbody','');
+			$sender_name = _breesee_get_display_name($user->uid);
+			$buyer_name = _breesee_get_display_name($order->uid);
+			$title = $order->products[0]->title;
+			$nid = $order->products[0]->nid;
+			$link = l($title, drupal_get_path_alias('node/' . $nid));
+			$healthy = array("!seller", "!buyer", "!breeseeadmin", "!product");
+			$yummy   = array($sender_name, $buyer_name, "Breesee", $link);
+			$subject = str_replace($healthy, $yummy, $mixedsub);
+			$body = str_replace($healthy, $yummy, $mixedbody);
+			$sender =  $user;
+			privatemsg_new_thread(array($recipients), $subject, $body, array('author' => $sender));
+			break;
+		case 'purchase':
+			$order = uc_order_load($oid);
+			$node = node_load($order->products[0]->nid);
+			$recipients = user_load($node->uid);
+			$mixedsub = variable_get('arrivedhead','');
+			$mixedbody = variable_get('arrivedbody','');
+			$sender_name = _breesee_get_display_name($user->uid);
+			$buyer_name = _breesee_get_display_name($order->uid);
+			$title = $order->products[0]->title;
+			$nid = $order->products[0]->nid;
+			$link = l($title, drupal_get_path_alias('node/' . $nid));
+			$healthy = array("!seller", "!buyer", "!breeseeadmin", "!product");
+			$yummy   = array($sender_name, $buyer_name, "Breesee", $link);
+			$subject = str_replace($healthy, $yummy, $mixedsub);
+			$body = str_replace($healthy, $yummy, $mixedbody);
+			$sender =  $user;
+			privatemsg_new_thread(array($recipients), $subject, $body, array('author' => $sender));
+			break;
+		case 'received':
+			$order = uc_order_load($oid);
+			$recipients = user_load($order->uid);
+			$mixedsub = variable_get('orderreceivedhead','');
+			$mixedbody = variable_get('orderreceivedbody','');
+			$sender_name = _breesee_get_display_name($user->uid);
+			$buyer_name = _breesee_get_display_name($order->uid);
+			$title = $order->products[0]->title;
+			$nid = $order->products[0]->nid;
+			$link = l($title, drupal_get_path_alias('node/' . $nid));
+			$healthy = array("!seller", "!buyer", "!breeseeadmin", "!product");
+			$yummy   = array($sender_name, $buyer_name, "Breesee", $link);
+			$subject = str_replace($healthy, $yummy, $mixedsub);
+			$body = str_replace($healthy, $yummy, $mixedbody);
+			$sender =  $user;
+			privatemsg_new_thread(array($recipients), $subject, $body, array('author' => $sender));
+			break;
+	}
+
+	
+
+}
+function _breesee_uc_get_country($cid) {
+	return $chksql = db_result(db_query('SELECT country_name FROM uc_countries where country_id = %d', $cid));
+}
+
+function _breesee_uc_get_zone($zid) {
+	return $chksql = db_result(db_query('SELECT zone_name FROM uc_zones where zone_id = %d', $zid));
+}
+
+function make_entrytopayment_table($order_id, $nid, $amt) {
+	$uid = db_result(db_query('SELECT uid FROM node where nid = %d', $nid));
+	db_query("INSERT INTO breesee_payment_history (uid, oder_id, amount, status) VALUES ('$uid', '$order_id', '$amt', 0) ");
+}
+
+//function breesee_uc_add_to_cart($nid, $qty, $data) {
+//	global $user, $base_url;
+//	$role = _breesee_get_role($user->uid);
+//	if($role == 'store') {
+//		drupal_set_message('Use your other account to make a purchase', 'warning');
+//		drupal_set_message('Click <a href="'.$base_url.'/purchaseswitch">HERE</a> to switch to your other account', 'warning');
+//	}
+//	
+//}
+
+function _breesee_uc_get_address_tab_link() {
+	global $user;
+	$rolee = _breesee_get_role($user->uid);
+	if($rolee == 'creator')
+		$txt = 'quicktabs_profile_edit_tab_creator=1';
+	else if($rolee == 'store')
+		$txt = 'quicktabs_profile_edit_tab_store=1';
+	else 
+		$txt = 'quicktabs_profile_edit_tab_page=1';
+	return 'user/settings';
+}
+
+
+function breesee_uc_form_alter(&$form, $form_state, $form_id) {
+	//print $form_id;
+	if($form_id == 'product_node_form') {
+		global $user, $base_url;
+		$str = content_profile_load('store', $user->uid);
+
+		$form['multiship'] = array(
+			'#type' => 'fieldset',
+			'#title' => t('Shipping Info'),
+			'#collapsible' => TRUE,
+			'#collapsed' => FALSE,
+			'#weight' => -2,
+  	);
+		$form['multiship']['def_shipto'] = array(
+			'#type' => 'item',
+			'#value' => BreeseeUK_taxonomy_links($str, '13'),
+  	);
+		$form['multiship']['def_cost'] = array(
+			'#type' => 'textfield',
+			'#title' => t('Shipping Cost'),
+			'#size' => 25, 
+  	);
+		//$form['multiship']['addlink'] = array(
+//			'#type' => 'item',
+//			'#value' => '<div id="location_container"></div><a class="classname" href="'.$base_url.'/add_moreshoiptos" rel="1" id="cntryadd_lotn">Add Location</a><span class="runner"></span>',
+//  	);
+		
+		$form['multiship']['addlink'] = array(
+        '#type' => 'button',
+        '#value' => t('Add Location'),
+				'#attributes' =>  array('class' => 'classname'),
+        '#ahah' => array(
+          'event' => 'click',
+          'path'    => 'add_moreshoiptos',
+          'wrapper' => 'location_container',
+          'method' => 'append',
+					'effect' => 'fade',
+        ),
+				'#submit' => array('node_form_submit_build_node'),
+      );
+			
+		//$form['#submit'][] = 'submitgoeshere';
+		array_unshift($form['#submit'], "submitgoeshere");
+		array_unshift($form['#validate'], "submitgoeshere");
+
+
+	}
+}
+
+
+function add_moreshoiptos_form() {
+	
+//	if(! is_numeric(arg(1)) ) {
+//		print 'Error';
+//		exit;
+//	}
+//	else { 
+		$countries = uc_country_select(uc_get_field_name('country'));
+		$options[0] = 'Everywhere Else';
+		foreach($countries['#options'] as $i => $country) {
+			$options[]= t($country);
+		}
+//		$cn_var = 'cntry'.arg(1);
+//		$co_var = 'cost'.arg(1);
+//		$form = array();
+//		$form['fdff'] = array( 
+//			"#type"=>"select",   
+//			'#title'    =>t('Ship To'),	
+//			'#required' => true ,
+//			'#options' => $options,
+//			'#weight' =>10,
+//			'#attributes' =>  array('id' => $cn_var, 'name' => $cn_var),
+//		);
+//		$form['dyn_cost'] = array( 
+//			"#type"=>"textfield",   
+//			'#title'    =>t('Shipping Cost'),	
+//			'#required' => true ,
+//			'#size' =>25,
+//			'#weight' =>11,
+//			'#id' =>  $co_var,
+//		);
+//		
+//		print '<div class="ship_itm">'.drupal_render($form).'<span class="rem_itm"></span></div>';
+//		exit;
+//	}
+
+
+// The form is generated in an include file which we need to include manually.
+  include_once 'modules/node/node.pages.inc';
+  
+  // We're starting in step #3, preparing for #4.
+  $form_state = array('storage' => NULL, 'submitted' => FALSE);
+  $form_build_id = $_POST['form_build_id'];
+  // Step #4.
+  $form = form_get_cache($form_build_id, $form_state);
+
+  // Preparing for #5.
+  $args = $form['#parameters'];
+  $form_id = array_shift($args);
+  $form_id = $args;
+  $form_state['post'] = $form['#post'] = $_POST;
+  $form['#programmed'] = $form['#redirect'] = FALSE;
+
+  // Step #5.
+  drupal_process_form($form_id, $form, $form_state);
+  
+  // Step #6 and #7 and #8.
+  // $form = drupal_rebuild_form($form_id, $form_state, $args, $form_build_id);
+  
+  //change your element here
+  
+  
+  
+  //$form = form_builder('node_form', $form, $form_state);
+  
+  // Step #9.
+			$form['shipping']['payment'] = array( 
+			"#type"=>"select",   
+			'#title'    =>t('Ship To'),	
+			'#required' => true ,
+			'#options' => $options,
+			'#weight' =>10,
+		);
+		$form['shipping']['paymentcost'] = array( 
+			"#type"=>"textfield",   
+			'#title'    =>t('Shipping Cost'),	
+			'#required' => true ,
+			'#size' =>25,
+			'#weight' =>11,
+		);
+		form_set_cache($form_build_id, $form, $form_state);
+  
+		$form += array(
+			'#post' => $_POST,
+			'#programmed' => FALSE,
+		);
+		
+		  $form = form_builder('product_node_form', $form, $form_state);
+			//print_r($form['shipping']['payment']);
+			// Render the new output.
+     $choice_form = $form['shipping'];
+		 
+		// print_r($choice_form );
+  //unset($choice_form['#prefix'], $choice_form['#suffix']);
+ echo $output =  drupal_render($choice_form);
+ exit;
+  
+  // Final rendering callback.
+ // drupal_json(array('status' => TRUE, 'data' => $output));
+ echo json_encode(array('status' => TRUE, 'data' => $output));
+}
+
+function submitgoeshere() {
+	//print_r($_POST);
+	//die;
+}

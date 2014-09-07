@@ -1,0 +1,7 @@
+; $Id: bresee_redirect.info $
+name = Bresee Redirects
+description = Bresee Helper ..
+core = 6.x
+package = Breesee
+dependencies[] = breesee
+

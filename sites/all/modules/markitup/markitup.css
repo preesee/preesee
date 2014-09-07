@@ -1,0 +1,15 @@
+
+/* Overriding the standard markItUp textarea width. */
+.markItUp {
+  width:99%;
+}
+/* No background images on mIU buttons! */
+
+ul li.markItUpButton {
+  background-image: none;
+}
+
+/* Stop CSS in node.css from resetting mIU's width value */
+.node-form textarea.markItUpEditor {
+  width: 643px;
+}

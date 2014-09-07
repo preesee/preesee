@@ -1,0 +1,1523 @@
+<?php
+// $Id: breesee_home.module $
+
+function bresee_home_perm() {
+	return array('access bresee_home','admin bresee_home');
+}
+
+function bresee_home_init() {
+	modalframe_parent_js();
+	drupal_add_js(drupal_get_path('module', 'modalframe_example') .'/modalframe_example.js');
+}
+
+function bresee_home_menu() { 
+  $items = array();
+  $items['store/%/%']   = array(
+    'title' => 'My Products',
+    'page callback' => 'bresee_city_myproducts',
+    'access arguments' => array('access bresee_home'),
+    'type' => MENU_CALLBACK
+  );
+  
+  $items['admin/viewreportabuse']   = array(
+    'title' => 'Report Abuse',
+    'page callback' => 'report_abuse',
+    'access arguments' => array('admin bresee_home'),
+    'type' => MENU_CALLBACK
+  );
+  
+   $items['admin/reportabuse/delete/%'] = array(
+    'title' => t('Delete message'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('reportabuse_item_delete'),
+    'access arguments' => array('admin bresee_home'),
+    'type' => MENU_CALLBACK,
+  );
+	return $items;
+}
+
+function bresee_home_block($op = 'list', $delta = 0) {
+  $block = array();
+  switch ($op) {
+    case 'list':
+      $block[0]['info'] = t('Blog Filter by Location'); 
+			$block[1]['info'] = t('No Login Left News Block'); 
+			$block[2]['info'] = t('Blog Add Block');
+			$block[3]['info'] = t('FBSSMB Block');
+			$block[4]['info'] = t('No Login Home Menu');
+			$block[5]['info'] = t('Home Image Slider');
+			$block[6]['info'] = t('City Filter Category');
+			$block[7]['info'] = t('City Filter Price');
+			$block[8]['info'] = t('City Filter Where');
+			$block[9]['info'] = t('City Filter History');
+			$block[10]['info'] = t('Store Banner Rotator');
+			$block[11]['info'] = t('My Products');
+			$block[12]['info'] = t('Store Detail Rightside');
+			$block[13]['info'] = t('Creator Filter Category');
+			$block[14]['info'] = t('Creator Filter Where');
+			$block[15]['info'] = t('Index Nologin Blog Block');
+			$block[16]['info'] = t('Facebbok Share Complete');
+			$block[17]['info'] = t('Creator Detail Blog [Arg]');
+			$block[18]['info'] = t('Creations [Arg]');
+			$block[19]['info'] = t('Home Page Menu');
+			$block[20]['info'] = t('User Followers BIG');
+			$block[21]['info'] = t('Address Add Block');
+			$block[22]['info'] = t('Favorite Products');
+			$block[23]['info'] = t('Product Filter Category');
+			$block[24]['info'] = t('Product Filter Where');
+			$block[25]['info'] = t('Product Filter Colour');
+			$block[26]['info'] = t('Product Filter Style');
+			$block[27]['info'] = t('Store Banner Slider');
+			$block[28]['info'] = t('Product Detail Right');
+			$block[29]['info'] = t('Shop Settings');
+			$block[30]['info'] = t('User Dropdown Submenu');
+			$block[31]['info'] = t('User Home Right');
+			$block[32]['info'] = t('User Profile Tab');
+			$block[33]['info'] = t('User content Profile Tab');
+			$block[34]['info'] = t('New Temp Tab');
+			$block[35]['info'] = t('Billing Address');
+			$block[36]['info'] = t('Shipping Address');
+			$block[37]['info'] = t('X Form Block');
+            $block[38]['info'] = t('Store Introduction');
+    return $block;
+    case 'view':
+      switch ($delta) {
+        case 0:
+          $block['subject'] = t('Blog Filter by Location');
+          $block['content'] = bresee_home_nologin_location_menu();
+        	break;     
+				case 1:
+          $block['subject'] = t('No Login Left News Block');
+          $block['content'] = bresee_home_nologin_left_news();
+        	break;  
+				case 2:
+          $block['subject'] = t('Blog Add Block');
+          $block['content'] = bresee_home_add_blog();
+        	break;  
+				case 3:
+          $block['subject'] = t('FBSSMB Block');
+          $block['content'] = bresee_fbsmp_form_block();
+        	break;  
+				case 4:
+          $block['subject'] = t('No Login Home Menu');
+          $block['content'] = bresee_nologin_homemenu();
+        	break; 
+				case 5:
+          $block['subject'] = t('Home Image Slider');
+          $block['content'] = bresee_nologin_homeslider();
+        	break; 
+				case 6:
+          $block['subject'] = t('City Filter Category');
+          $block['content'] = bresee_city_filter_cat();
+        	break; 
+//				case 7:           20140720  henry.hua issue 83
+//          $block['subject'] = t('City Filter Price');
+//          $block['content'] = bresee_city_filter_price();
+//        	break;
+				case 8:
+          $block['subject'] = t('City Filter Where');
+          $block['content'] = bresee_city_filter_where();
+        	break;
+				case 9:
+          $block['subject'] = t('City Filter History');
+          $block['content'] = bresee_city_filter_history();
+        	break;
+				case 10:
+          $block['subject'] = t('Store Banner Rotator');
+          $block['content'] = bresee_city_banner_rotator();
+        	break;
+				case 11:
+          $block['subject'] = t('My Products');
+          $block['content'] = bresee_city_myproducts();
+        	break;
+				case 12:
+          $block['subject'] = t('Store Detail Rightside');
+          $block['content'] = bresee_city_detailright();
+        	break;
+				case 13:
+          $block['subject'] = t('Creator Filter Category');
+          $block['content'] = bresee_creator_filter_category();
+        	break;
+				case 14:
+          $block['subject'] = t('Creator Filter Where');
+          $block['content'] = bresee_creator_filter_where();
+        	break;
+				case 15:
+          $block['subject'] = t('Index Nologin Blog Block');
+          $block['content'] = bresee_index_nologin_blogblock();
+        	break;
+				case 16:
+          $block['subject'] = t('Facebbok Share Complete');
+          $block['content'] = bresee_facebook_like_share_complete();
+        	break;
+				case 17:
+          $block['subject'] = t('Creator Detail Blog [Arg]');
+          $block['content'] = bresee_index_nologin_blogblock_arg();
+        	break;
+				case 18:
+          $block['subject'] = t('Creations [Arg]');
+          $block['content'] = bresee_creations_arg(); // also a page in breesee.module 
+        	break;
+				case 19:
+          $block['subject'] = t('Home Page Menu');
+          $block['content'] = bresee_homepage_left_menu(); 
+        	break;
+				case 20:
+          $block['subject'] = t('User Followers BIG');
+          $block['content'] = bresee_followeers_list(); 
+        	break;
+				case 21:
+          $block['subject'] = t('Address Add Block');
+          $block['content'] = bresee_home_add_address(); 
+        	break;
+				case 22:
+          $block['subject'] = t('Favorite Products');
+          $block['content'] = bresee_favorite_products(); 
+        	break;
+				case 23:
+          $block['subject'] = t('Product Filter Category');
+          $block['content'] = bresee_prod_filtr_category(); 
+        	break;
+				case 24:
+          $block['subject'] = t('Product Filter Where');
+          $block['content'] = bresee_prod_filtr_where(); 
+        	break;
+				case 25:
+          $block['subject'] = t('Product Filter Colour');
+          $block['content'] = bresee_prod_filtr_color(); 
+        	break;
+				case 26:
+          $block['subject'] = t('Product Filter Style');
+          $block['content'] = bresee_prod_filtr_style(); 
+        	break;
+				case 27:
+          $block['subject'] = t('Store Banner Slider');
+          $block['content'] = bresee_store_banner_slider(); 
+        	break;
+				case 28:
+          $block['subject'] = t('Product Detail Right');
+          $block['content'] = bresee_product_detail_right_top(); 
+        	break;
+				case 29:
+          $block['subject'] = t('Shop Settings');
+          $block['content'] = bresee_online_shop_setting(); 
+        	break;
+				case 30:
+          $block['subject'] = t('User Dropdown Submenu');
+          $block['content'] = breesee_user_dropdown(); 
+        	break;
+				case 31:
+          $block['subject'] = t('User Home Right');
+          $block['content'] = breesee_user_home_right(); 
+        	break;
+				case 32:
+          $block['subject'] = t('User Profile Tab');
+          $block['content'] = breesee_user_profile_tab(); 
+        	break;
+				case 33:
+          $block['subject'] = t('User content Profile Tab');
+          $block['content'] = breesee_content_profile_tab(); 
+        	break;
+				case 34:
+          $block['subject'] = t('New Temp Tab');
+          $block['content'] = breesee_new_temp(); 
+        	break;
+				case 35:
+          $block['subject'] = t('Billing Address');
+          $block['content'] = breesee_billing_address(); 
+        	break;
+				case 36:
+          $block['subject'] = t('Shipping Address');
+          $block['content'] = breesee_shipping_address(); 
+        	break;
+				case 37:
+          $block['subject'] = t('X Form Block');
+          $block['content'] = getallforms_here();
+        	break;
+                case 38:
+              $block['subject'] = t('Store Introduction');
+              $block['content'] = breesee_store_intruction();
+              break;
+      }
+     return $block;
+  }
+}
+
+function bresee_home_nologin_location_menu() {
+		global $base_url;
+		$query = "select tid, name from {term_data} where vid = 13 and tid in (select tid from term_hierarchy where parent = 0 ) " ;
+		$query_result = db_query($query);
+		$blockk = '<div class="blog_filter_location"><div class="category_block"><h1>Where</h1><ul id="nologinfilter" rel="theblog/filter">';
+		while($row = db_fetch_object($query_result)) {
+			$tid = $row->tid;
+			$termname = $row->name;
+			$blockk .= '<li class="sublev firstlvl" ><a href="theblog/filter/'.$tid.'" rel="nextlevel/'.$tid.'">' . $termname. ' + </a>';
+			$blockk .= breesee_countryCityList($tid);
+			
+			$blockk .= '</li>';
+		}
+		$blockk .= '</ul></div></div>';
+		return $blockk;
+}
+
+//_gettermsname
+
+function breesee_favorite_nodes() {
+	return '';
+}
+
+function bresee_home_nologin_left_news () {
+
+	/*$sql = "SELECT distinct node.nid, node.uid ,content_field_city.field_city_value as tid, facebook_status.message as message 
+					FROM `node` 
+					LEFT JOIN content_field_city 
+					ON content_field_city.nid = node.nid
+					LEFT JOIN facebook_status
+					ON facebook_status.sender = node.uid 
+					WHERE node.uid NOT IN (0, 1) 
+					AND content_field_city.field_city_value <> 'NULL'  AND facebook_status.message!=''
+					GROUP BY tid 
+					ORDER BY facebook_status.sid DESC";*/
+
+			 $sql = "
+
+SELECT DISTINCT(facebook_status.sid) AS sid,
+ facebook_status.message AS facebook_status_message,
+ facebook_status.sid AS facebook_status_sid,
+ content_field_city.field_city_value AS tid,
+ users.uid AS uid,
+ @num := if(@type = content_field_city.field_city_value, @num + 1, 1) as row_number,
+ @type := content_field_city.field_city_value as dummy
+ FROM facebook_status facebook_status 
+ INNER JOIN users users ON facebook_status.sender = users.uid
+ LEFT JOIN node node_users ON users.uid = node_users.uid AND node_users.type IN ( 'creators','store','audience')
+ LEFT JOIN content_field_city ON content_field_city.nid = node_users.nid
+ ORDER BY sid DESC";
+	$result = db_query($sql);
+	$html = '';
+	$html .= '<div class="hom_cat"><h3>Updated News</h3><div class="ho_cat_contan">';
+	$arry = array();
+	while($row = db_fetch_object($result)) {
+	if(!array_key_exists($row->tid,$arry)){
+	  $arry[$row->tid] = $row;
+		}
+	}
+	//$arry = array_reverse($arry);
+	foreach($arry as $key => $val){
+	  $tid = $val->tid;
+		$message = $val->facebook_status_message;
+		$html .= '<h2>'.ucfirst(_gettermsname($tid)).'</h2>
+              <p>'.drupal_summarise($message,10).'</p>';
+	}
+	$html .= '</div></div>';
+	return $html;
+}
+
+function bresee_home_add_blog() {
+	global $user;
+	if($user->uid == 0 ) {
+		// Not logged in
+		$uid = arg(1);
+		$role = _breesee_get_role($uid);
+		if($role == 'audience') {
+			$sql = "select requestee_id from {friendlist_relations} where rtid = '1' and requester_id = '$uid' ";
+			$query_result = db_query($sql);
+			while($row = db_fetch_object($query_result))	{
+				$requester_id[] = $row->requestee_id;	
+			}
+			$uids = implode(',', $requester_id);
+			$sql    = "select nid from {node} where uid in($uids) and type = 'blog' order by node.created DESC ";
+			$query_count = "SELECT COUNT(*) FROM (" . $sql . ") AS count_query";
+			$result = pager_query($sql,10,0,$query_count);
+			while($row = db_fetch_array($result)){
+				$blogs[] = node_load($row['nid']);
+			} 
+			$pager =  array('#value' => theme('pager', NULL, 10, 0));
+			$data['pager'] =  $pager;
+			$data['blogs']  = $blogs;
+			return theme('nologin_blogblock_arg',$data);
+		}
+		else {
+			$sql = "select nid from {node} where uid = '$uid' and type = 'blog' order by node.created DESC ";
+			$query_count = "SELECT COUNT(*) FROM (" . $sql . ") AS count_query";
+			$result = pager_query($sql,10,0,$query_count);
+			while($row = db_fetch_array($result)){
+				$blogs[] = node_load($row['nid']);
+			} 
+			$pager =  array('#value' => theme('pager', NULL, 10, 0));
+			$data['pager'] =  $pager;
+			$data['blogs']  = $blogs;
+			return theme('nologin_blogblock_arg',$data);
+		}
+	}
+	else {
+		// Logged in
+		
+		if(arg(1) == 'home') {
+			$uid = $user->uid;
+		}
+		else {
+			$uid = arg(1);
+			//$user = user_load($uid);
+		}
+		//print arg(0).'***'.arg(1).'***'.$uid.'***';
+		$role = _breesee_get_role($uid);
+		//if(arg(1) == 'home') {
+			if($role == 'audience') {
+				$sql = "select requestee_id from {friendlist_relations} where rtid = '1' and requester_id = '$uid' ";
+				$query_result = db_query($sql);
+				while($row = db_fetch_object($query_result))	{
+					$requester_id[] = $row->requestee_id;	
+				}
+				$uids = implode(',', $requester_id);
+				$sql    = "select nid from {node} where uid in ($uids) and type = 'blog' order by node.created DESC ";
+				$query_count = "SELECT COUNT(*) FROM (" . $sql . ") AS count_query";
+				$result = pager_query($sql,10,0,$query_count);
+				while($row = db_fetch_array($result)){
+					$blogs[] = node_load($row['nid']);
+				} 
+				$pager =  array('#value' => theme('pager', NULL, 10, 0));
+				$data['pager'] =  $pager;
+				$data['blogs']  = $blogs;
+				return theme('nologin_blogblock_arg',$data);
+			}
+			else {
+				
+				$curr_user = user_load($uid);
+				module_load_include('inc', 'node', 'node.pages');
+				$blog_list = module_invoke('views', 'block', 'view', 'myblogs-block_1');
+				$type = 'blog';
+				$node = array(
+					'uid' => $curr_user->uid,
+					'name' => (isset($curr_user->name) ? $curr_user->name : ''),
+					'type' => $type,
+					'language' => '',
+				);
+				
+				if(arg(1) == 'home') {
+					return '<div class="blog_add_home">'.drupal_get_form($type . '_node_form', $node).'<div class="clear"></div><div class="blog_list_home_page">'.$blog_list['content'].'</div></div>';
+				}
+				else {
+					return '<div class="clear"></div><div class="blog_list_home_page">'.$blog_list['content'].'</div>';
+				}
+				
+			}
+		//}
+		//else {
+		//	$dfgf = 0;
+		//}
+	}
+
+}
+
+function bresee_home_add_address() {	
+	global $user;
+    module_load_include('inc', 'node', 'node.pages');
+    $type = 'address';
+    $node = array(
+      'uid' => $user->uid,
+      'name' => (isset($user->name) ? $user->name : ''),
+      'type' => $type,
+      'language' => '',
+    );
+    return drupal_get_form($type . '_node_form', $node);
+}
+
+function bresee_fbsmp_form_block() {	
+	global $user;
+	$url = arg(1);
+//	$rtid = 1;
+// $stat = friendlist_api_relation_status_get( $url, $user->uid, $rtid);
+// if($stat == 'OW_1_TO_2' || $stat == 'OW_2_TO_1' ) {
+//		$dname = _breesee_get_display_name($url);
+//		$html = '<div class="contact_placeholder"></div><div id="no_wall"> 
+//		<h1>Permission Denied</h1>
+//		<p>You dont have sufficient permissions to access <b>'.$dname.'</b>&prime;s Wall</p>
+//		<p>Reason : <b>'.$dname.'</b> is not your Follower</p>
+//		</div>';
+//		return $html;
+//	}
+//	else { 
+		if ($url == 'home') {
+			global $user;
+			$userk = $user;
+		}
+		else
+		$userk = user_load(arg(1));
+		//$view = variable_get('facebook_status_share_view', 'breesee_status_all');
+		//return '<div class="contact_placeholder"></div>'.theme('facebook_status_form_display', $userk, 'user');   issue 78 henry.hua  fix blog input item ....
+        return '<div class="contact_placeholder"></div>'. breesee_getBlogByuid($user->uid);
+		//}
+}
+function bresee_nologin_homemenu() {
+	$html = '';
+	global $user, $base_url;
+	//drupal_add_js(drupal_get_path('module', 'breesee') . '/js/fetchhome.js');
+	drupal_add_js(drupal_get_path('module', 'swftools') . '/flash_media_player/swfobject.js');
+	
+	$html .= '<div class="item-list"><ul id="nologinhomemmnu">';
+	if(arg(0) != 'user') {
+		$html .= '<li> <a class="fb ajax" href="theblog/filter/all">Home</a></li>';
+		$html .= '<li> <a class="video ajax" href="fbvideos">Video</a></li>';
+	}
+	else {
+		$html .= '<li> <a class="noajax" href="myownblog/all/ajsx/'.arg(1).'">Home</a></li>';
+		$html .= '<li> <a class="noajax" href="myfbvideos/'.arg(1).'">Video</a></li>';
+	}
+	$query = "SELECT term_data.tid AS tid, term_data.name AS term_data_name, term_data.vid AS term_data_vid FROM term_data term_data  WHERE term_data.vid in ('12') " ;
+		$query_result = db_query($query);
+		while($row = db_fetch_object($query_result)) {
+			$tid = $row->tid;
+			$term_data_name = $row->term_data_name;
+			$url = 'theblog';
+			if((arg(0) == 'user') && is_numeric(arg(1)))
+			$url = 'myownblog';
+			$html .= '<li> <a class="noajax" href = "'.$url.'/main/'.$tid.'/'.arg(1).'">' .$term_data_name. '</a></li>';
+			}
+	$html .= '</ul></div>';
+	return $html;
+}
+
+function bresee_nologin_homeslider() {
+	global $user, $base_url;
+	drupal_add_css(drupal_get_path('theme', 'BreeseeUK').'/easyslider/css/screen.css');
+	drupal_add_js(drupal_get_path('theme', 'BreeseeUK').'/easyslider/js/easySlider.js');
+	drupal_add_js('$(document).ready(function(){$("#slider").easySlider({auto: true,continuous: true});});','inline');	
+	$html = '<div id="slider">
+			<ul>';	
+				$sql = "SELECT nid from node where type = 'featured_slider' ";
+				$result = db_query($sql);
+				$k = '';
+				$cnt = 1;
+				$row = db_fetch_object($result);
+				$node = node_load($row->nid);
+				//print_r($node);
+				for($i=0; $i<=4; $i++) {
+				$html .='	<li>'. theme('imagecache',  'home_slider_978x260' , $node->field_featured_slider[$i]['filepath'],  $node->field_image1[$i]['data']['alt'], $node->field_image1[$i]['data']['title'] ) .'<div class="bannercontnt">
+									<p>'.  $node->field_featured_slider[$i]['data']['description'] .'</p>
+									</div></li>';
+				}
+	//<h2>'. $node->title .'</h2>
+	$html .='</ul>
+	</div><div id="statics">';
+	$n = node_load('278');
+	$var = rand(1, 9);
+	$html .= theme('imagecache',  'banner_right_small' , $n->field_imagesss[$var]['filepath'] );
+	$html .='</div>';
+	return $html;
+}
+
+//function bresee_city_filter_cat () {
+//	$html = '';
+//	global $user, $base_url;
+//	$html .= '<div class="home_breesee_left_block"><div class="category_block"><h1>Categories</h1><div class="item-list"><ul id="cityfilter">';
+//	$query = "SELECT term_data.tid AS tid, term_data.name AS term_data_name, term_data.vid AS term_data_vid FROM term_data term_data  WHERE term_data.vid in ('18') " ;
+//		$query_result = db_query($query);
+//		while($row = db_fetch_object($query_result)) {
+//			$tid = $row->tid;
+//			$term_data_name = $row->term_data_name;
+//			$count = taxonomy_term_count_nodes($tid, 'store');
+//			if($count > 0)
+//			$html .= '<li><span>'.taxonomy_image_display($tid).'</span><span><a href = "'.$base_url.'/cities/category/'.$tid.'">' .$term_data_name. ' ( '.taxonomy_term_count_nodes($tid, 'store').' ) </a></span></li>';
+//			}
+//	$html .= '</ul></div></div></div>';
+//	return $html;
+//}
+function bresee_city_filter_cat () {
+    $html = '';
+    global $user, $base_url;
+    $html .= '<div class="home_breesee_left_block"><div class="category_block"><h1>Categories</h1><div class="item-list"><ul id="cityfilter">';
+    $query = "SELECT term_data.tid AS tid, term_data.name AS term_data_name, term_data.vid AS term_data_vid FROM term_data term_data  WHERE term_data.vid in ('18') " ;
+    $query_result = db_query($query);
+    while($row = db_fetch_object($query_result)) {
+        $tid = $row->tid;
+        $term_data_name = $row->term_data_name;
+        //$count = taxonomy_term_count_nodes($tid, 'store');
+       // if($count > 0)
+            $html .= '<li><span>'.taxonomy_image_display($tid).'</span><span><a href = "'.$base_url.'/cities/category/'.$tid.'">' .$term_data_name. '  </a></span></li>';
+    }
+    $html .= '</ul></div></div></div>';
+    return $html;
+}
+
+
+function bresee_city_filter_price() {
+	$typee = 'product';
+//	if(arg(0) == 'shops' )
+//		$typee = 'product';
+	$html = '';
+	global $user, $base_url;
+	$html .= '<div class="home_breesee_left_block"><div class="category_block"><h1>Price</h1><div class="item-list"><ul id="cityfilter">';
+	$query = "SELECT term_data.tid AS tid, term_data.name AS term_data_name, term_data.vid AS term_data_vid FROM term_data term_data  WHERE term_data.vid in ('19') " ;
+		$query_result = db_query($query);
+		while($row = db_fetch_object($query_result)) {
+			$tid = $row->tid;
+			$term_data_name = $row->term_data_name;
+			$html .= '<li><span> '.taxonomy_image_display($tid).'</span><span><a href = "'.$base_url.'/shops/price/'.$tid.'">' .$term_data_name. ' ( '.taxonomy_term_count_nodes($tid, $typee).' ) </a></span></li>';
+			}
+	$html .= '</ul></div></div></div>';
+	return $html;
+}
+
+function bresee_city_filter_where() {
+		global $base_url;
+		$query = "select tid, name from {term_data} where vid = 13 and tid in (select tid from term_hierarchy where parent = 0 ) " ;
+		$query_result = db_query($query);
+		$blockk = '<div class="blog_filter_location"><div class="category_block"><h1>Where</h1><ul id="nologinfilter" >';
+		while($row = db_fetch_object($query_result)) {
+			$tid = $row->tid;
+			$termname = $row->name;
+			$blockk .= '<li class="sublev firstlvl" ><a href="'.$base_url.'/cities/location/'.$tid.'" rel="nextlevel/'.$tid.'" >' . $termname. ' + </a>';
+			$blockk .= breesee_countryCityList($tid);
+		}
+		$blockk .= '</ul></div></div>';
+		return $blockk;
+}
+
+
+function bresee_prod_filtr_where() {
+		global $base_url;
+		$query = "select tid, name from {term_data} where vid = 13 and tid in (select tid from term_hierarchy where parent = 0 ) " ;
+		$query_result = db_query($query);
+		$blockk = '<div class="home_breesee_left_block"><div class="category_block"><h1>Where</h1><ul id="nologinfilter" rel="shops/location">';
+		while($row = db_fetch_object($query_result)) {
+			$tid = $row->tid;
+			$termname = $row->name;
+			$blockk .= '<li class="sublev firstlvl"><a href="'.$base_url.'/shops/location/'.$tid.'">' . $termname. ' + </a>';
+			$blockk .= breesee_countryCityList($tid);
+			$blockk .= '</li>';
+		}
+		$blockk .= '</ul></div></div><div class="clear"></div>';
+		return $blockk;
+}
+
+function bresee_city_filter_history() {
+$html = '';
+	global $user, $base_url;
+	$html .= '<div class="home_breesee_left_block"><div class="category_block"><h1>Open since </h1><div class="item-list"><ul id="cityfilter">';
+	$query = "SELECT term_data.tid AS tid, term_data.name AS term_data_name, term_data.vid AS term_data_vid FROM term_data term_data  WHERE term_data.vid in ('20') " ;
+		$query_result = db_query($query);
+		while($row = db_fetch_object($query_result)) {
+			$tid = $row->tid;
+			$term_data_name = $row->term_data_name;
+			$html .= '<li> <span>'.taxonomy_image_display($tid).'</span><span><a href = "'.$base_url.'/cities/history/'.$tid.'">' .$term_data_name. ' ( '.taxonomy_term_count_nodes($tid, 'store').' ) </a></span></li>';
+			}
+	$html .= '</ul></div></div></div>';
+	return $html;
+}
+
+
+function bresee_city_banner_rotator () {
+	
+	global $user, $base_url;
+	
+	if(arg(0) == 'user' && is_numeric(arg(1))) {
+		$strid = arg(1);
+	}
+	else {
+		$strid = $user->uid;
+	}
+	
+	$sql = "SELECT nid from node where type = 'featured_slider' AND uid = '$strid' ORDER BY nid DESC LIMIT 0,1";
+	$result = db_query($sql);
+	$cnt = db_result(db_query($sql));	
+	if($cnt > 0)	{	
+	drupal_add_js(drupal_get_path('theme', 'BreeseeUK').'/js/mobilyslider.init.js');
+	drupal_add_js(drupal_get_path('theme', 'BreeseeUK').'/js/mobilyslider.js');
+	$html = '<div class="slider">
+			<div class="sliderContent">';	
+				$row = db_fetch_object($result);
+				$node = node_load($row->nid);
+				for($i=0; $i<=4; $i++) {
+				$html .='	<div class="item">'. theme('imagecache',  'center_image' , $node->field_featured_slider[$i]['filepath'],  $node->field_featured_slider[$i]['data']['alt'], $node->field_featured_slider[$i]['data']['title'] ) .'<h4>Lorem ipsum dolorsit amet</h4><div class="smal_scroller">
+									<h2><strong>'. $node->field_featured_slider[$i]['data']['description'] .'</strong></h2>
+									<p>'.$node->teaser.'</p>
+									</div></div>';
+				}
+	$html .='
+				</div>
+				</div>';
+	$html .='<div class="clear"></div>';
+	}
+	else 
+	$html = '';
+	return $html;
+}
+
+function bresee_city_myproducts() {
+	global $user, $base_url;
+	drupal_add_js(drupal_get_path('module', 'breesee').'/js/productdetailside.js');
+	$strid = arg(1);
+	$html = '';
+	$html .='<div>';
+	if(arg(3) != 'ajax') {
+		$html .='<div class="viewblk" id="storetab3btm">';
+		$blockm = module_invoke('bresee_home', 'block', 'view', 10);
+		$html .= $blockm['content'];
+		$html .= '</div><div class="clear"></div>';
+	}
+	$html .= '<div class="stor_tab3prod">';
+	$html .= _bree_product_filter();
+	$html .= '<div class="stor_tab3prod" id="ajax_page"><ul class="stor_tab3produl sidenavgation">';
+	$sql = "SELECT distinct nid from node where type = 'product' and uid = '$strid' ";
+	$query_count = "SELECT COUNT(*) FROM (" . $sql . ") AS count_query";
+	$result = pager_query($sql,12,0,$query_count);
+	$i = 1;
+	while($row = db_fetch_object($result)) {
+		$node = node_load($row->nid);
+		$usr = user_load($node->uid);
+		$c = $i%3;
+		$x = ($c == 0) ? "right": "left";
+		$html .= '<li class=" '.$x.'">';
+		$html .= theme('imagecache', 'store_page_product_images', $node->field_image_cache[0]['filepath'], $alt, $title, $attributes);
+		$html .= '<h1>'.trim_text($node->title, 15).'</h1>';
+		$html .= '<span>'.BreeseeUK_taxonomy_links($node, 17).'</span>';
+		$html .= '<div class="inner_info" style="display: block; left: 0px; opacity: 0; "><p>Designed By</p><h1>'._breesee_get_display_name($usr->uid).'</h1><h2>$'.round($node->sell_price, 2).'</h2><a href="'.$base_url.'/'.drupal_get_path_alias('node/'.$node->nid).'">View Details</a><a href="http://www.addthis.com/bookmark.php" style="text-decoration:none;" class="addthis_button" >Share</a> '.theme('uc_product_add_to_cart', $node).' </div>';
+		//}
+		$html .= '</li>';
+		$i++;
+	}
+	$pager =  array('#value' => theme('pager', NULL, 12, 0));
+	$html .= '</ul></div><div id="pager">'.drupal_render($pager).'</div>
+</div></div>';
+	
+	if(arg(3) == 'ajax') {
+		print $html;
+	}
+	else {
+		return $html;
+	}
+	
+}
+
+
+function trim_text($input, $length, $ellipses = true, $strip_html = true) {
+    if ($strip_html) {
+        $input = strip_tags($input);
+    }
+    if (strlen($input) <= $length) {
+        return $input;
+    }
+    $last_space = strrpos(substr($input, 0, $length), ' ');
+    $trimmed_text = substr($input, 0, $last_space);
+    if ($ellipses) {
+        $trimmed_text .= '...';
+    }
+    return $trimmed_text;
+}
+
+function bresee_city_detailright() {
+	drupal_add_js(drupal_get_path('module', 'breesee').'/js/followme.js');
+	global $user, $base_url;
+	
+	if(is_numeric(arg(1)))
+		$uid = arg(1);
+	else if(arg(1) == 'home')
+		$uid = $user->uid;
+	$stor_usr = user_load($uid);
+	$usr_role = _breesee_get_role($uid);
+	$html = '';
+	$html .= '<div class="storright">';
+	$html .= '<h1>Share '._breesee_get_display_name($uid).' with your Friends</h1>';
+	$block = module_invoke('addthis', 'block', 'view',0);
+	$html .= $block['content'];
+	$folnos = _breesee_count_following($uid);
+	$ac_role = _breesee_get_role($user->uid);
+	if( $ac_role == 'store')
+		$html .= '<div>';
+	$html .= '<h1>'._breesee_get_display_name($uid).' has <span id="folow_count">'.$folnos.'</span> Followers </h1>';
+	if( ($user->uid) ){           //if( ($user->uid) && ($ac_role != 'store' ) ){   henry.hua 2014.2.21           修改follow 不显示
+		$stat = friendlist_api_relation_status_get($user->uid, $uid, 1);
+		$html .= '<div id="followmediv" class="'.$stat.'" >';
+		if($stat == 'OW_1_TO_2' || $stat == 'OW_NONE')
+			$html .= '<a href="javascript:void(0)" rel="'.arg(1).'" id="followme">&nbsp;</a>';
+		else 
+			$html .= '<a href="javascript:void(0)" rel="nofollow" id="followme" style="cursor:default">&nbsp;</a>';
+	}
+	if($user->uid == 0 ){
+		$html .= '<div class="OW_NONE">';
+		$html .= '<a href="'.$base_url.'/user/login" id="followme" rel="'.arg(1).'" ></a>';
+	}
+	$html .= '</div><div id="followers"></div>';
+	$html .= '<h1>Your Next '.ucfirst($usr_role).'</h1>';
+	
+	if ($usr_role == 'store' ) 
+		$rid = 6;
+	else if ($usr_role == 'creator' ) 
+		$rid = 5;
+	else 
+		$rid = 4;
+	
+	$html .= _breesee_next_users($uid, $rid);
+	$html .= '</div>';
+	return $html;
+}
+
+
+
+
+
+function _bree_product_filter() { // Use in fn. bresee_city_myproducts
+
+drupal_add_js(drupal_get_path('module', 'breesee').'/js/storedetail_product_filter.js');
+$html = '<div class="filter_menu">
+    <ul id="product_filter"> <b>Sort By </b>
+        <li><a class="hide" href="">Price</a>
+            <ul>';
+						$query = "select name, tid from term_data where vid = '19' "; // 17 => Price cat vocabulary
+						$query_result = db_query($query);
+						while($row = db_fetch_object($query_result)) {
+						$tid = $row->tid;
+						$name = $row->name;
+						$html .='<li class="filter_item" ><a class="clik" href="javascript:void(0);" rel="'.arg(1).'/'.$tid.'" >'.$name .'</a></li>';
+						}
+						$html .='</ul>
+        </li>
+        <li><a class="hide" href="">Category</a>
+        	<ul>';
+						$query = "select name, tid from term_data where vid = '17' "; // 17 => Product cat vocabulary
+						$query_result = db_query($query);
+						while($row = db_fetch_object($query_result)) {
+						$tid = $row->tid;
+						$name = $row->name;
+						$html .='<li class="filter_item" ><a class="clik" href="javascript:void(0);" rel="'.arg(1).'/'.$tid.'" >'.$name .'</a></li>';
+						}
+						$html .='</ul>
+        </li>
+				<li><a class="hide" href="">Color</a>
+        	<ul>';
+		$vid = 30;
+		global $base_url;
+		$sql = "SELECT name, tid FROM {term_data} WHERE vid = %d ORDER BY tid ASC";
+		$result = db_query(db_rewrite_sql($sql), $vid);
+		$terms = array();
+		while ($data = db_fetch_object($result)){
+			$term = $data->name;
+			$tid = $data->tid;
+			$terms[] = $term;
+			$html .= '<li ><a class="clik" href="javascript:void(0);" rel="'.arg(1).'/'.$tid.'" ><span style="background:'.$term.'" >&nbsp;</span></a></li>';
+		}
+						$html .='</ul>
+        </li>
+    </ul>
+  
+  </div>';
+return $html;
+}
+
+function _bree_creation_filter() { // Use in fn. bresee_city_myproducts
+
+//drupal_add_js(drupal_get_path('module', 'breesee').'/js/credet_creation_filter.js');
+$html = '<div class="filter_menu">
+    <ul id="product_filter"> <b>Sort By </b>
+        <li><a class="hide" href="">Time</a>
+            <ul>';
+						$query = "select name, tid from term_data where vid = '29' "; // 17 => Price cat vocabulary
+						$query_result = db_query($query);
+						while($row = db_fetch_object($query_result)) {
+						$tid = $row->tid;
+						$name = $row->name;
+						$html .='<li class="filter_item" ><a class="clik" href="javascript:void(0);" rel="'.arg(1).'/'.$tid.'" >'.$name .'</a></li>';
+						}
+						$html .='</ul>
+        </li>
+        <li><a class="hide" href="">Category</a>
+        	<ul>';
+						$query = "select name, tid from term_data where vid = '23' "; // 17 => Product cat vocabulary
+						$query_result = db_query($query);
+						while($row = db_fetch_object($query_result)) {
+						$tid = $row->tid;
+						$name = $row->name;
+						$html .='<li class="filter_item" ><a class="clik" href="javascript:void(0);" rel="'.arg(1).'/'.$tid.'" >'.$name .'</a></li>';
+						}
+						$html .='</ul>
+        </li>
+    </ul>
+  
+  </div>';
+return $html;
+}
+
+//
+//function bresee_creator_filter_category() {                henry.hua 2014.04.20
+//	$html = '';
+//	global $user, $base_url;
+//	$html .= '<div class="home_breesee_left_block"><div class="category_block"><h1>Categories</h1><div class="item-list"><ul id="cityfilter">';
+//	$query = "SELECT term_data.tid AS tid, term_data.name AS term_data_name, term_data.vid AS term_data_vid FROM term_data term_data  WHERE term_data.vid in ('22') " ;
+//		$query_result = db_query($query);
+//		while($row = db_fetch_object($query_result)) {
+//			$tid = $row->tid;
+//			$term_data_name = $row->term_data_name;
+//			$html .= '<li><span>'.taxonomy_image_display($tid).'</span><span><a href = "'.$base_url.'/creators/category/'.$tid.'">' .$term_data_name. ' ( '.taxonomy_term_count_nodes($tid, 'creators').' ) </a></span></li>';
+//			}
+//	$html .= '</ul></div></div></div>';
+//	return $html;
+//}
+
+function bresee_creator_filter_category() {
+    $html = '';
+    global $user, $base_url;
+    $html .= '<div class="home_breesee_left_block"><div class="category_block"><h1>Categories</h1><div class="item-list"><ul id="cityfilter">';
+    $query = "SELECT term_data.tid AS tid, term_data.name AS term_data_name, term_data.vid AS term_data_vid FROM term_data term_data  WHERE term_data.vid in ('22') " ;
+    $query_result = db_query($query);
+    while($row = db_fetch_object($query_result)) {
+        $tid = $row->tid;
+        $term_data_name = $row->term_data_name;
+        $html .= '<li><span>'.taxonomy_image_display($tid).'</span><span><a href = "'.$base_url.'/creators/category/'.$tid.'">' .$term_data_name. '  </a></span></li>';
+    }
+    $html .= '</ul></div></div></div>';
+    return $html;
+}
+
+function bresee_creator_filter_where() {
+		global $base_url;
+		$query = "select tid, name from {term_data} where vid = 13 and tid in (select tid from term_hierarchy where parent = 0 ) " ;
+		$query_result = db_query($query);
+		$blockk = '<div class="blog_filter_location"><div class="category_block"><h1>Where</h1><ul id="nologinfilter" rel="theblog/filter">';
+		while($row = db_fetch_object($query_result)) {
+			$tid = $row->tid;
+			$termname = $row->name;
+			$blockk .= '<li class="sublev firstlvl" ><a href="creators/location/'.$tid.'" rel="nextlevel/'.$tid.'">' . $termname. ' + </a>';
+			$blockk .= breesee_countryCityList($tid);
+			
+			$blockk .= '</li>';
+		}
+		$blockk .= '</ul></div></div>';
+		return $blockk;
+}
+
+function bresee_index_nologin_blogblock() {
+	$filter = arg(1);
+	$sql    = "SELECT node.nid AS nid, users.uid AS users_uid FROM node node  LEFT JOIN term_node term_node ON node.vid = term_node.vid LEFT JOIN node_revisions node_revisions ON node.vid = node_revisions.vid WHERE (node.type in ('blog')) ODER BY node.created DESC";
+	$query_count    = "SELECT count(node.nid) FROM node WHERE (node.type in ('blog')) ";
+	if($filter != '') {
+		switch ($filter) {
+			case 'category' :
+				$_SESSION['city']['category'] = arg(2);
+			break;
+			case 'history' :
+				$_SESSION['city']['history'] = arg(2);
+			break;
+			case 'price' :
+				$_SESSION['city']['price'] = arg(2);
+			break;
+			case 'location' :
+				$_SESSION['city']['location'] = arg(2);
+			break;
+		}
+		$nids_str = implode(", ", $_SESSION['city']);
+		$query = "select distinct uid from {node} where nid in ( select 	nid from {term_node} where tid in ($nids_str) )" ;
+		$query_result = db_query($query);
+		while($row = db_fetch_object($query_result)) {
+			$uid[] = $row->uid;
+		}
+		$uid_str = implode(", ", $uid);
+		$sql    = "SELECT node.nid AS nid, node.language AS node_language, users.picture AS users_picture, users.uid AS users_uid, users.name AS users_name, users.mail AS users_mail, node.created AS node_created, node.title AS node_title, node_revisions.body AS node_revisions_body, node_revisions.format AS node_revisions_format FROM node node  LEFT JOIN term_node term_node ON node.vid = term_node.vid INNER JOIN users users ON node.uid = users.uid LEFT JOIN node_revisions node_revisions ON node.vid = node_revisions.vid WHERE (node.type in ('blog')) AND (term_node.tid IN (2307, 2309, 2310)) order by node.created DESC ";
+		$query_count = "SELECT COUNT(*) FROM (" . $sql . ") AS count_query";
+	}
+	$query_count = "SELECT COUNT(*) FROM (" . $sql . ") AS count_query";
+	$result = pager_query($sql,20,0,$query_count);
+  while($row = db_fetch_array($result)){
+    $blogs[] = node_load($row['nid']);
+  } 
+  $pager =  array('#value' => theme('pager', NULL, 9, 0));
+	$data['pager'] =  $pager;
+	$data['blogs']  = $blogs;
+  if(arg(3) == 'ajax') {
+		print theme('nologin_blogblock',$data);
+	}
+	else {
+		return theme('nologin_blogblock',$data);
+	}
+}
+
+function bresee_facebook_like_share_complete() {
+
+	$block = module_invoke('block', 'block_view', 'facebook_status');
+	print $block['content'];
+}
+
+
+function bresee_index_nologin_blogblock_arg() {
+	$uid = arg(1);
+	$sql    = "SELECT nid from node  WHERE type in ('blog') and uid =  '$uid' order by node.created DESC ";
+	$query_count = "SELECT COUNT(*) FROM (" . $sql . ") AS count_query";
+	$result = pager_query($sql,10,0,$query_count);
+  while($row = db_fetch_array($result)){
+    $blogs[] = node_load($row['nid']);
+  } 
+  $pager =  array('#value' => theme('pager', NULL, 10, 0));
+	$data['pager'] =  $pager;
+	$data['blogs']  = $blogs;
+	//print_r($data);
+  if(arg(3) == 'ajax') {
+		print theme('nologin_blogblock_arg',$data);
+	}
+	else {
+		return theme('nologin_blogblock_arg',$data);
+	}
+}
+
+function bresee_creations_arg() {
+	drupal_add_js(drupal_get_path('module', 'breesee') . '/js/jquery.jcarousel.min.js');
+	drupal_add_js(drupal_get_path('module', 'breesee') . '/js/creationfit.js');
+	drupal_add_css(drupal_get_path('module', 'breesee') . '/js/skin.css');
+	
+	if(arg(2) == 'pub' ) {
+		$nid = arg(2);
+		drupal_add_js('dfgsdfgsdfgdfg('.$nid.')', 'inline');
+	}
+	
+	$uid = arg(1);
+	$filtr = '<div class="contact_placeholder"></div><div id="store_introduction">'._bree_creation_filter();
+	$sql    = "SELECT node.nid AS nid FROM node WHERE (node.type in ('creations')) and uid = $uid ORDER BY created DESC";
+	$query_count = "SELECT COUNT(*) FROM (" . $sql . ") AS count_query";
+	$result = pager_query($sql,18,0,$query_count);
+  while($row = db_fetch_array($result)){
+    $creations[] = node_load($row['nid']);
+  } 
+  $pager =  array('#value' => theme('pager', NULL, 18, 0));
+	$data['pager'] =  $pager;
+	$data['creations']  = $creations;
+  $res = db_fetch_array(db_query($query_count));
+  if(arg(3) == 'ajax') {
+		print $filtr.theme('creations_block',$data);
+	}
+	else {
+		return $filtr.theme('creations_block',$data);
+	}
+}
+
+function doIFollow($fid) {
+	global $user;
+	$uid = $user->uid;
+	$sql = "select count(*) from {friendlist_relations} where rtid = '2' and requester_id	 = $uid and requestee_id = '$fid ' "; 
+	$res = db_result(db_query($sql));
+	if($res == 1) 
+	return true;
+	else 
+	return false;
+
+}
+
+
+function bresee_homepage_left_menu() {
+	$data = array();
+	return theme('bresee_homepage_left_menu',$data);
+}
+function bresee_followeers_list() {
+	drupal_add_js(drupal_get_path('module', 'breesee') . '/js/followermix.js');
+	drupal_add_js(drupal_get_path('module', 'breesee') . '/js/followfilter.js');
+	$html = '';
+	$html .= '<div id="followerorfollowing"><ul><li><a href="javascript:void(0);" class="active" rel="Followers">Following</a></li><li><a href="javascript:void(0);" rel="Following">Followers</a><li></ul></div>';
+	$html .= '</div><div class="foll_filter"> <ul id="follower" class="followfiltersclass">
+																<li><a href="javascript:void(0);" class="fltr folo" rel="5">Creator</a></li>
+																<li> | </li>
+																<li><a href="javascript:void(0);" class="fltr folo" rel="6">City Store</a></li>
+																<li> | </li>
+																<li><a href="javascript:void(0);" class="fltr folo" rel="4">Members</a></li>
+																</ul></div><div class="clear"></div>';
+	$html .= '<div class="clear"></div>';
+	$html .= '<div id="followers_content"></div>';
+	$html .= '<div class="followers_filter_content"></div>';
+	$html .= '<div class="clear">';
+	return $html;
+}
+
+
+function bresee_favorite_products() {
+	$html = '';
+	global $user;
+	$uid = $user->uid;
+	//$uid = 1; // dev
+	$sql = "SELECT favorite_nodes.nid as nid from favorite_nodes LEFT JOIN node ON favorite_nodes.nid = node.nid WHERE node.type = 'product' AND favorite_nodes.uid = $uid ";
+	$count_query = "SELECT COUNT(*) FROM (" . $sql . ") AS count_query";
+	$result_set = pager_query($sql, 5, 0 , $count_query);
+  while($row = db_fetch_array($result_set)){
+    $fav_pro[] = node_load($row['nid']);
+  } 
+	$pager =  array('#value' => theme('pager', NULL, 5, 0));
+	$data['pager'] =  $pager;
+	$data['fav_pro']  = $fav_pro;
+	if(arg(3) == 'ajax') {
+		print theme('favorite_products',$data);
+	}
+	else {
+		return theme('favorite_products',$data);
+	}
+	
+}
+
+
+//function bresee_prod_filtr_category() {         2014/04/19 henry hua  remove categories numbers
+//	$html = '';
+//	global $user, $base_url;
+//	$html .= '<div class="home_breesee_left_block"><div class="category_block"><h1>Categories</h1><div class="item-list"><ul id="prodfilter" rel="shops/category">';
+//	$query = "SELECT term_data.tid AS tid, term_data.name AS term_data_name, term_data.vid AS term_data_vid FROM term_data term_data  WHERE term_data.vid in ('17') " ;
+//		$query_result = db_query($query);
+//		while($row = db_fetch_object($query_result)) {
+//			$tid = $row->tid;
+//			$term_data_name = $row->term_data_name;
+//			$html .= '<li><span>'.taxonomy_image_display($tid).'</span><span><a href = "'.$base_url.'/shops/category/'.$tid.'">' .$term_data_name. ' ( '.taxonomy_term_count_nodes($tid, 'product').' ) </a></span></li>';
+//			}
+//	$html .= '</ul></div></div></div>';
+//	return $html;
+//}
+function bresee_prod_filtr_category() {
+    $html = '';
+    global $user, $base_url;
+    $html .= '<div class="home_breesee_left_block"><div class="category_block"><h1>Categories</h1><div class="item-list"><ul id="prodfilter" rel="shops/category">';
+    $query = "SELECT term_data.tid AS tid, term_data.name AS term_data_name, term_data.vid AS term_data_vid FROM term_data term_data  WHERE term_data.vid in ('17') " ;
+    $query_result = db_query($query);
+    while($row = db_fetch_object($query_result)) {
+        $tid = $row->tid;
+        $term_data_name = $row->term_data_name;
+        $html .= '<li><span>'.taxonomy_image_display($tid).'</span><span><a href = "'.$base_url.'/shops/category/'.$tid.'">' .$term_data_name.'  </a></span></li>';
+    }
+    $html .= '</ul></div></div></div>';
+    return $html;
+}
+
+
+function bresee_prod_filtr_color() {
+		
+		$mainclrarray = array('Red', 'Orange', 'Yellow', 'Green', 'Azure', 'Blue', 'Purple', 'White', 'Black');
+		$cntr_val = 0;
+		$cntr_val_next = 3;
+		$blockk = '<div class="home_breesee_left_block"><div class="category_block"><h1>Color</h1><ul id="prodfilter" class="filter_color" rel="shops/color">';
+		$vid = 30;
+		global $base_url;
+		foreach($mainclrarray as $val) {
+			$blockk .= '<li>'.$val;
+			$sql = "SELECT name, tid FROM {term_data} WHERE vid = $vid ORDER BY tid ASC LIMIT $cntr_val, $cntr_val_next";
+			$result = db_query(db_rewrite_sql($sql), $vid);
+			$blockk .= '<ul class="next_lvl_clr">';
+			while ($data = db_fetch_object($result)){
+				$term = $data->name;
+				$tid = $data->tid;
+				$blockk .= '<li class="clrspan" ><a href = "'.$base_url.'/shops/color/'.$tid.'"><span rel="/shops/color/'.$term.'" style="background:'.$term.'" >'.taxonomy_term_count_nodes($tid, 'product').'</span></a></li>';
+				
+			}
+			$blockk .= '</ul>';
+			$blockk .= '</li>';
+			$cntr_val += 3;
+		}
+		$blockk .= '</ul></div></div><div class="clear"></div>';
+		return $blockk;
+}
+
+function bresee_prod_filtr_style() {
+	$html = '';
+	global $base_url;
+	$html .= '<div class="home_breesee_left_block"><div class="category_block"><h1>Style</h1><div class="item-list"><ul id="prodfilter" rel="shops/style">';
+	$query = "SELECT term_data.tid AS tid, term_data.name AS term_data_name, term_data.vid AS term_data_vid FROM term_data term_data  WHERE term_data.vid in ('14') " ;
+		$query_result = db_query($query);
+		while($row = db_fetch_object($query_result)) {
+			$tid = $row->tid;
+			$term_data_name = $row->term_data_name;
+			$html .= '<li><span>'.taxonomy_image_display($tid).'</span><span><a href = "'.$base_url.'/shops/style/'.$tid.'">' .$term_data_name. ' ( '.taxonomy_term_count_nodes($tid, 'product').' ) </a></span></li>';
+			}
+	$html .= '</ul></div></div></div>';
+	return $html;
+}
+
+function bresee_store_banner_slider() {
+	drupal_add_css(drupal_get_path('theme', 'BreeseeUK').'/easyslider/css/fullscreen.css');
+	drupal_add_js(drupal_get_path('theme', 'BreeseeUK').'/easyslider/js/easySlider.js');
+	drupal_add_js('$(document).ready(function(){$("#fullscreen").easySlider({auto: true, continuous: true});});	','inline');	
+	drupal_add_js('$(document).ready(function(){ $(".bannercontnt").css("display", "none"); 
+	$("#fullscreen").mouseenter(function() {
+			 $(".bannercontnt").fadeIn("slow");
+		});
+	$("#fullscreen").mouseleave(function() {
+			 $(".bannercontnt").fadeOut("slow");
+		});
+	});','inline');
+	
+	$html = '<div id="container"><div id="header"></div><div id="content"><div id="fullscreen"><ul>';	
+				$sql = "SELECT nid from node where type = 'featured_slider' ";
+				$result = db_query($sql);
+				$k = '';
+				$cnt = 1;
+				$row = db_fetch_object($result);
+				$node = node_load($row->nid);
+				//print_r($node);
+				for($i=0; $i<=4; $i++) {
+				$html .='	<li>'. theme('imagecache',  '978x260' , $node->field_featured_slider[$i]['filepath'],  $node->field_featured_slider[$i]['data']['alt'], $node->field_featured_slider[$i]['data']['title'] ) .'<div class="bannercontnt">
+									<h2>'. $node->title .'</h2>
+									<p>'. $node->field_featured_slider[$i]['data']['description'].'</p>
+									</div></li>';
+				}
+
+	$html .='</ul>
+				</div>
+				</div>
+				</div>';
+	return $html;
+}
+
+function bresee_product_detail_right_top() {
+	$data = node_load(arg(1));
+	return theme('product_detail_right',$data);
+}
+
+function bresee_add_address() {
+		global $user;
+    module_load_include('inc', 'node', 'node.pages');
+    $type = 'address';
+    // Initialize settings:
+    $node = array(
+      'uid' => $user->uid,
+      'name' => (isset($user->name) ? $user->name : 'Anonymous'),
+      'type' => $type,
+      'language' => '',
+    );
+    return drupal_get_form($type . '_node_form', $node);
+}
+
+
+function bresee_online_shop_setting() {
+		global $user;
+		$sql = "SELECT  COUNT(*) FROM  node WHERE type = 'featured_slider' AND uid = ".$user->uid;
+		$countrows = db_result(db_query($sql));
+		
+		
+		
+		if($countrows == 0) {
+			module_load_include('inc', 'node', 'node.pages');
+			$type = 'featured_slider';
+			$node = array(
+				'uid' => $user->uid,
+				'name' => (isset($user->name) ? $user->name : 'Anonymous'),
+				'type' => $type,
+				'language' => '',
+				'type' => 'featured_slider',
+			);
+			$output = drupal_get_form($type.'_node_form', $node);
+		}
+		else {
+		
+			$mysql = "SELECT  nid FROM  node WHERE type = 'featured_slider' AND uid = ".$user->uid;
+			$row = db_query($mysql);
+			$resd = db_fetch_object($row);
+			$node = node_load($resd->nid);
+			module_load_include('inc', 'node', 'node.pages');  
+			$node_type = 'featured_slider';
+			$form_id = $node_type . '_node_form';
+			global $user;
+			node_object_prepare($node);
+			$output = drupal_get_form($form_id, $node);
+		}
+		
+		return $output;
+		
+}
+//  remove purchase drop down list   issue 45
+function breesee_user_dropdown() {
+	global $user, $base_url;
+	$role_arr = $user->roles;
+	$uid = $user->uid;
+	$query = "SELECT aud_uid, cre_uid, str_uid FROM {breesee_users} where aud_uid = '$uid' OR cre_uid = '$uid' OR  str_uid = '$uid'"  ;
+		$query_result = db_query($query);
+		$row = db_fetch_object($query_result);
+		
+		$aud_uid = $row->aud_uid;
+		$cre_uid = $row->cre_uid;
+		$str_uid = $row->str_uid;
+		
+	
+	if (in_array('audience', $role_arr ) )	{
+	
+		if($cre_uid == NULL && $str_uid != NULL) {
+			$my_menu = '<div class="top_slide_middle">
+								<a href="'.$base_url.'/user/home">My Dashboard</a>
+								<a href="'.$base_url.'/user/myfollowers">Follow &amp; Favorite</a>
+								<a href="'.$base_url.'/switch/store">My City Store</a>
+								<a href="'.$base_url.'/upgrade" class="modalframe-example-child modalframe-example-size[350,323]">Upgrade</a>
+								</div>';
+			}
+		else if($cre_uid != NULL && $str_uid == NULL) {
+			$my_menu = '<div class="top_slide_middle">
+								<a href="'.$base_url.'/user/home">My Dashboard</a>
+								<a href="'.$base_url.'/user/myfollowers">Follow &amp; Favorite</a>
+								<a href="'.$base_url.'/switch/creator" >My Creator Account</a>
+								<a href="'.$base_url.'/upgrade" class="modalframe-example-child modalframe-example-size[350,323]">Not a Seller Yet</a>
+								</div>';
+			}
+		else  {
+			$my_menu = '<div class="top_slide_middle">
+								<a href="'.$base_url.'/user/home">My Dashboard</a>
+								<a href="'.$base_url.'/user/myfollowers">Follow &amp; Favorite</a>
+								<a href="'.$base_url.'/upgrade" class="modalframe-example-child modalframe-example-size[350,323]">Upgrade</a>
+								</div>';
+			}
+		
+	}
+	else if (in_array('store', $role_arr ) )
+	{
+		if($cre_uid != NULL) {
+			$my_menu = '<div class="top_slide_middle">
+								<a href="'.$base_url.'/user/home">My Dashboard</a>
+								<a href="'.$base_url.'/user/myfollowers">Follow &amp; Favorite</a>
+								<a href="'.$base_url.'/user/myshelf">My Shelf</a>
+								<a href="'.$base_url.'/order/soldorders">Sold Orders</a>
+								<a href="'.$base_url.'/switch/creator" >My Creator Account</a>
+								</div>';
+		}
+		else {
+			$my_menu = '<div class="top_slide_middle">
+								<a href="'.$base_url.'/user/home">My Dashboard</a>
+								<a href="'.$base_url.'/user/myfollowers">Follow &amp; Favorite</a>
+								<a href="'.$base_url.'/user/myshelf">My Shelf</a>
+								<a href="'.$base_url.'/order/soldorders">Sold Orders</a>
+								<a href="'.$base_url.'/switch/audience" >My Reader Account</a>
+								</div>';
+		}
+
+	}
+	else if (in_array('creator', $role_arr ) )
+	{
+			if($str_uid == NULL ) {
+			$my_menu = '<div class="top_slide_middle">
+								<a href="'.$base_url.'/user/home">My Dashboard</a>
+								<a href="'.$base_url.'/user/myfollowers">Follow &amp; Favorite</a>
+								<a href="'.$base_url.'/upgrade" class="modalframe-example-child modalframe-example-size[350,323]">Not a Seller Yet</a>
+								</div>';
+			}
+		else {
+			$my_menu = '<div class="top_slide_middle">
+								<a href="'.$base_url.'/user/home">My Dashboard</a>
+								<a href="'.$base_url.'/user/myfollowers">Follow &amp; Favorite</a>
+								<a href="'.$base_url.'/switch/store" >My City Store</a>
+								</div>';
+			}
+	}
+	return $my_menu;
+}
+
+
+function breesee_user_home_right() {
+	global $user;
+	$uid = $user->uid;
+	$data = $uid;
+	return theme('userhome_right',$data);
+}
+
+
+function breesee_user_profile_tab() {
+	global $user;
+	module_load_include('inc', 'user', 'user.pages');
+  $form = user_edit($user);
+	return $form;
+}
+
+
+function breesee_content_profile_tab() {
+
+	global $user;
+
+  $uid = ($user->uid > 1)? $user->uid : arg(1);
+	
+  $users = user_load($uid);
+
+   if(in_array('audience',$users->roles)){
+     $type = 'audience';
+   }
+	 if(in_array('creator',$users->roles)){
+			 $type = 'creators';
+		}
+	if(in_array('store',$users->roles)){
+     $type = 'store';
+  }
+
+$node  = content_profile_load($type, $uid);
+
+$mode = "edit";
+
+module_load_include('inc', 'node', 'node.pages');
+
+if (empty($node) && node_access('create', $type)) {
+     $node = array('uid' => $uid, 'name' => (isset($users->name) ? $users->name : ''), 
+                   'type' => $type, 'language' => '');
+     $mode = "add";
+}
+//Alter submit form
+$html_form = drupal_get_form($type .'_node_form', $node);
+
+if($mode == 'add')
+    $form = str_replace('"/user/' . $uid . '/edit','"/node/add/'.$type.'"',$html_form);
+else
+    $form = str_replace('"/user/' . $uid . '/edit','"/node/' . $node->nid . '/edit',$html_form);
+     
+return $form; 
+
+}
+
+
+function _breesee_get_to($mid, $author) {
+	global $user;
+	$query = "SELECT uid FROM {pm_index} where mid = '$mid' AND uid <> '$author'  " ;
+		$query_result = db_query($query);
+		$row = db_fetch_object($query_result);
+		$uid = $row->uid;
+		return $uid;
+}
+
+function report_abuse($op = NULL, $qid = NULL) {  
+global $base_url;
+global $user;
+	
+		
+			  switch ($op) {
+				  
+				default:
+				  $headers = array(t('User'), t('Product'), t('message'),t('Reason') ,t('Action'));
+				
+				$sql = 'SELECT * FROM {abuse} INNER JOIN abuse_reasons ON  abuse.reason = abuse_reasons.arid  ORDER BY abuse.oid DESC';
+
+				  $result = pager_query($sql);
+				  $rows = array();
+				  
+				  while ($r = db_fetch_object($result)) {
+				  
+				  $nid =$r->oid;
+				  $uid = $r->uid;
+				  $reason = $r->reason;
+				  $node_details = node_load($nid);
+					
+					//print_r($node_details);
+				 $user_details = user_load($uid);
+				 $prod_image =$node_details->field_image_cache[0]['filepath'];
+				
+				 $username = $user_details->name;
+				 
+				
+				  
+				   $img =  '<a href="'.$base_url.'/node/'.$nid.'"><img src="'.$base_url.'/'.$prod_image.'" width="69px" height="67px"></a>';
+				   $message = stripslashes($r->body);
+					$rows[] = array(($username), ($img), $message,$reason, l(t('delete'),  'admin/reportabuse/delete/'. $nid));
+				}  
+				  $output = theme('table', $headers, $rows, array('style' => 'width:100%', 'cellpadding' => '5'));
+				  $output .= theme('pager');
+			  }
+			return $output;
+		 }
+		 
+		 
+		 	function reportabuse_item_delete(&$form_state) {
+		
+		  
+	return confirm_form($form,
+    	t('Are you sure you want to delete this mesage?'),
+    	isset($_GET['destination']) ? $_GET['destination'] : "user",
+    	t('This action cannot be undone.'),
+    	t('Delete'),
+    	t('Cancel'));
+  
+}
+
+
+function reportabuse_item_delete_submit($form, &$form_state) { 
+global $base_url;
+
+$qid  = arg(3);
+
+		$form_values = $form_state['values']; 
+		if ($form_state['values']['confirm'])
+		 {
+						
+						$query = "DELETE  FROM {abuse} where oid='".$qid."'";
+						$rs = db_query($query);
+						drupal_set_message(t('message deleted.'));
+			}
+
+  drupal_goto('admin/viewreportabuse');
+}
+function breesee_new_temp() {
+	$k = 'sdfsdfsdf';
+	return $k;
+}
+
+
+function breesee_billing_address() {
+	global $user;
+	$output = '<div class="addrssform">';
+	$output .= drupal_get_form('uc_addresses_get_address_form', $user, NULL, 'add');
+	$output .= '</div>';
+	return $output;
+}
+
+function breesee_shipping_address() {
+	global $user;
+	$output = '<div class="addrssform addresslists">';
+	$output .= uc_addresses_list_addresses($user);
+	$output .= '</div>';
+	return $output;
+}
+function breesee_store_intruction() {
+    global $user;
+    $output = '<div class="store_introduction">';
+    $output .= drupal_get_form('store_introduction_form', $user, NULL, 'add');
+    $output .= 'introduction</div>';
+    return $output;
+}
+function getallforms_here() {
+  global $user;
+	$uid = $user->uid;
+	$forms[] = drupal_get_form('user', $uid);
+	
+  foreach( $forms as $f ) {
+    $content .= $f;
+		}
+  return ($content);
+}
+
+
+function getallforms_here_submit(&$form) {
+  // this is just called three times
+  # normal form handling stuff
+}
+
+
+function breeseeuk_taxonomy_links($node, $vid) {
+
+//if the current node has taxonomy terms, get them
+  if (count($node->taxonomy)):
+    $tags = array();
+     foreach ($node->taxonomy as $term) {
+       if ($term->vid == $vid):
+          //$tags[] = l($term->name, taxonomy_term_path($term)); /* If you want them in links  */
+					$tags[] = $term->name;
+          endif;
+}
+    if ($tags):
+//get the vocabulary name and name it $name
+        $vocab = taxonomy_get_vocabulary($vid);
+        $name = $vocab->name;
+        //$output .= t("$name") . ": " . implode(' | ', $tags); /* It wil dispaly vocab name too*/
+				$output .=  implode(' , ', $tags);
+    endif;
+  endif;
+     if ($output):
+       return $output;
+     endif;
+}
+
+function taxonomy_get_vocabulary($vid) {
+  static $vocabularies = array();
+
+  if (!array_key_exists($vid, $vocabularies)) {
+    $result = db_query('SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE v.vid = %d ORDER BY v.weight, v.name', $vid);
+    $node_types = array();
+    while ($voc = db_fetch_object($result)) {
+      $node_types[] = $voc->type;
+      unset($voc->type);
+      $voc->nodes = $node_types;
+      $vocabularies[$vid] = $voc;
+    }
+  }
+
+  return $vocabularies[$vid];
+}
+
+

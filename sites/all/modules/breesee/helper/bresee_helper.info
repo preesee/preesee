@@ -1,0 +1,7 @@
+; $Id: bresee_helper.info $
+name = Bresee Helper
+description = Bresee Helper. Manage all custom Cron jobs in Breeses, also supporting funcitions 
+core = 6.x
+package = Breesee
+dependencies[] = breesee
+

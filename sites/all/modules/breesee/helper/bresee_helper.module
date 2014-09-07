@@ -1,0 +1,212 @@
+<?php
+
+// $Id: bresee_helper.module $
+/**
+**	
+*/
+
+function bresee_helper_perm()
+{
+	return array('access bresee_helper',);
+}
+
+
+function bresee_helper_token_list($type = 'all') {
+    $tokens['breesee']['rol'] = 'The Use\'r Role';
+		$tokens['breesee']['disp'] = 'The Use\'r Public page link';
+		$tokens['breesee']['fullname'] = 'The Use\'r Display Name as in Breesee';
+    return $tokens;
+}
+
+function bresee_helper_token_values($type, $object = NULL, $options = array()) {
+			
+		$account = user_load($object->uid);
+		$role_arr = $account->roles;
+		if (in_array('audience', $role_arr ) ) 	{
+			$my_prof = 'audience';
+			$alias = $object->name;
+		}
+		else if (in_array('store', $role_arr ) )	{
+			$my_prof = 'city';
+			$prof = content_profile_load('store', $object->uid);
+			$alias = $prof->field_alias[0]['value'];
+		}
+		else if (in_array('creator', $role_arr ) )	{
+			$my_prof = 'creator';
+			$prof = content_profile_load('creators', $object->uid);
+			$alias = $prof->field_alias[0]['value'];
+		} 	
+		else {
+			$my_prof = 'audience';
+			$alias = $object->name;
+		}
+	$tokens['fullname'] = _breesee_get_display_name($object->uid);
+  $tokens['rol']  = $my_prof;
+	$tokens['disp']  = $alias;
+  return $tokens;
+}
+
+
+
+function bresee_helper_views_query_alter(&$view, &$query) {
+
+ global $user;
+ $uid = $user->uid;
+
+ switch($view->name){
+  case 'breesee_status_all':
+	 $url = arg(1);
+	 if ($url == 'home') {
+		global $user;
+		$userk = $user;
+	}
+	else
+		$userk = user_load(arg(1));
+		
+   $friend_list = db_query("SELECT friendlist_relations.rid AS rid,
+   users_friendlist_relations_1.name AS users_friendlist_relations_1_name,
+   users_friendlist_relations_1.uid AS users_friendlist_relations_1_uid,
+   users_friendlist_relations_1.picture AS users_friendlist_relations_1_picture,
+   users_friendlist_relations_1.mail AS users_friendlist_relations_1_mail
+ FROM friendlist_relations friendlist_relations 
+ LEFT JOIN users users_friendlist_relations ON friendlist_relations.requester_id = users_friendlist_relations.uid
+ LEFT JOIN users users_friendlist_relations_1 ON friendlist_relations.requestee_id = users_friendlist_relations_1.uid
+ INNER JOIN friendlist_statuses friendlist_statuses ON friendlist_relations.rid = friendlist_statuses.rid
+ WHERE (friendlist_statuses.status in ('OW_1_TO_2', 'OW_BOTH')) AND (users_friendlist_relations.uid = $userk->uid)
+   ");
+		$arg = array();
+		/*adding own status */
+		   $arg[] = $userk->uid;
+		 /*end*/
+		 if($user->uid != 0 ) {
+			 while($fetch_friend = db_fetch_array($friend_list)){
+				$arg[] = $fetch_friend['users_friendlist_relations_1_uid'];
+			 }
+			}
+		  $query->where[0]['clauses'][1] = 'facebook_status.sender in ('.implode(",",$arg).')';
+	 break;
+	 
+	case 'user_heartbeat_activit':
+		/// Managing the Filters 
+		if(arg(0) == 'activityfiltyer' ) {
+			if(arg(1) == '3') 
+				$query->where[0]['clauses'][] = "heartbeat_activity.uid  = '$uid' ";
+			else if(arg(1) == '1') {
+				//$my_followings = _breesee_helper_get_my_followings();
+				//$query->where[0]['clauses'][] = "heartbeat_activity.uid IN (".$my_followings.")";
+				$query->where[0]['clauses'][] = "heartbeat_activity.uid IN (".$uid.")";
+			}
+		}
+		/// Managing the Filters  end 
+		else { 
+			//$my_followings = _breesee_helper_get_my_followings();
+			$query->where[0]['clauses'][] = "heartbeat_activity.uid IN (".$uid.")";
+		}
+		break;
+		
+		case 'myblogs':
+			if(arg(1) == 'home') 
+				$query->where[0]['args'][1] = $uid;
+			break;
+ }
+}
+
+
+function _breesee_helper_get_my_followings() {
+	global $user;
+	$uid = $user->uid;
+	$sql = "select requestee_id from {friendlist_relations} where rtid = '1' and requester_id = '$uid' ";
+	$query_result = db_query($sql);
+	$requester_ids[] = $uid;
+	while($row = db_fetch_object($query_result))	{
+		$requester_ids[] = $row->requestee_id;
+	}
+	$comma_separated = implode(",", $requester_ids);
+	return $comma_separated;
+	
+}
+
+function bresee_helper_add_to_cart($nid, $qty, $data) {
+	$items = uc_cart_get_contents();
+	//print_r($items);
+}
+
+
+
+function bresee_helper_cron() {
+
+	$vid = 29;
+	db_query("DELETE FROM {term_node} WHERE tid IN ('7217', '7215', '7214', '7216') ");
+	$curDate		=	strtotime(date("Y-m-d"));
+	$alltime_tid = 7217;
+	$last3months = strtotime('-3 months');
+	$last3months_tid = 7215;
+	$lastmonth = strtotime('-1 months');
+	$lastmonth_tid = 7214;
+	$lastyr = strtotime('-1 years');
+	$lastyr_tid = 7216;
+	$sevndays = strtotime('-7 days');
+	$sevndays_tid = 7341;
+	$query		=	"SELECT created, nid FROM `node` WHERE type IN ('creations') ";
+	$qry  = db_query($query);							 
+	while($rows = db_fetch_object($qry)){
+		$created = $rows->created;
+		$nid = $rows->nid;
+			$tid = 7217;
+			applytid($nid, $tid);
+			if($created > $last3months) {
+				applytid($nid, $last3months_tid);
+			}
+			if($created > $lastmonth) {
+				applytid($nid, $lastmonth_tid);
+			}
+			if($created > $lastyr) {
+				applytid($nid, $lastyr_tid);
+			}
+			if($created >= $sevndays) {
+				applytid($nid, $sevndays_tid);
+			}
+	}
+	
+	// Store age calculation 
+	db_query("DELETE FROM {term_node} WHERE tid IN ('2434', '2435', '2436', '2437', '2438') ");
+	$curDate		=	strtotime(date("Y-m-d 00:01"));
+	$latest = strtotime('-9 year');
+	$latest_tid = 2434;
+	$moderns_ten_trs = strtotime('-10 year');
+	$moderns_ten_trs_tid = 2435;
+	$vintage_twentyfive_yrs = strtotime('-25 years');
+	$vintage_twentyfive_yrs_tid = 2436;
+	$over_fifty_yrs = strtotime('-50 year');
+	$over_fifty_yrs_tid = 2437;
+	$traditional = strtotime('-100 year');
+	$traditional_tid = 2438;
+	$query = "SELECT created, nid FROM `node` WHERE type IN ('store') ";
+	$qry  = db_query($query);							 
+	while($rows = db_fetch_object($qry)){
+		$created = $rows->created;
+		$nid = $rows->nid;
+			if($created < $curDate) {
+				applytid($nid, $latest_tid);
+			}
+			if($created < $moderns_ten_trs) {
+				applytid($nid, $moderns_ten_trs_tid);
+			}
+			if($created < $vintage_twentyfive_yrs) {
+				applytid($nid, $vintage_twentyfive_yrs_tid);
+			}
+			if($created < $traditional) {
+				applytid($nid, $traditional_tid);
+			}
+	}
+	drupal_set_message("Age calculation Cron Success on Creations and Stores");
+} 
+
+function applytid($nid, $tid) {
+	db_query("INSERT INTO {term_node} (nid, vid, tid) VALUES ('$nid','$nid','$tid' ) ");
+}
+
+
+
+
+

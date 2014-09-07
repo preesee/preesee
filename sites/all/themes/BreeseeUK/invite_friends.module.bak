@@ -1,0 +1,136 @@
+<?php
+
+/**
+ *
+ * @file invite_friends.module
+ *
+ */
+
+/*
+ * Implementation of hook_init().
+ */
+
+function invite_friends_init(){
+  global $user; 
+ 
+}
+
+/*
+ * Implementation of hook_perm().
+ */
+function invite_friends_perm(){
+  return array('invite friends admin','invite friends user');
+}
+
+/*
+ * Implementation of hook_menu().
+ */
+function invite_friends_menu(){
+  $items = array();
+  $items['invite-friends'] = array(
+    'title' => t('Invite Friends'), 
+    'description' => t('Displays Invite friends form'), 
+	 'page callback' => 'invite_friends_complete',
+    'access callback' => TRUE,    
+    'access arguments' => array('invite friends user'),
+    'type' => MENU_CALLBACK
+  );
+	return $items;
+}
+
+
+function invite_friends_theme()
+{
+
+}
+
+function invite_friends_complete()
+{
+	 global $base_url,$user;
+	 $output .="<h2>Invite your friends to Compete in the Horse Racing Fantasy Community and Earn Points!</h2>";
+	 $output .= "<p style='text-align:justify;'><img src='".$base_url."'/community/files/invite_a_friend.jpg' style='float:right;margin:5px 0 5px 10px;width:180px;height:125px;' alt='Invite a friend' title='Invite a Friend' />We know that is more exciting to compete against those that you know - <span style='text-decoration:underline;'>it makes bragging about winning so much more fun</span>. So we are providing a new feature to the Horse Racing Fantasy Community to invite your friends, co-workers and loved ones to join you in playing Horse Racing Fantasy!</p>";
+	 $output .="<p style='text-align:justify;'>Use the form below to invite a friend to the community and we will send them a personalized e-mail on your behalf, along with a registration code that will give you <strong>10,000 Community Points</strong> when your friend registers using the code and finishes their 10th race! We'll also give your friend <strong>5,000 Community Points</strong> when they complete their 10th race just for being invited by you.</p>";
+	 $output .="<p style='text-align:justify;'><strong>When your friend registers his/her game using the code we send, we'll also automatically add them to your buddy list, and you to theirs so you can compare stats and compete for bragging rights.</strong> To invite a friend, fill out the form below completely and then click preview.</p>";
+	 $output .= get_referrer_real_name($user->uid);
+	 $output .= "<h2>Invite Your Friend</h2>";
+	 $output .= drupal_get_form('invite_friends_inviteform');
+	  return $output;
+}
+function invite_friends_inviteform()
+{
+	$form['inviteFriend'] = array(
+	 '#type' => 'fieldset',
+	);
+	
+  
+	$form['inviteFriend']['referringuid'] = array(
+	'#title' => t(''),
+	'#type' => 'hidden',  
+	'#default_value' => $user->uid,  
+	);
+	
+	$form['inviteFriend']['referringusername'] = array(
+	'#title' => t(''),
+	'#type' => 'hidden',  
+	'#default_value' => $user->name,  
+	);
+	 $form['inviteFriend']['friendsname'] = array(
+    '#title' => t("Enter Your Friend's Name:"),
+    '#type' => 'textfield',
+    '#size' => 75,
+    '#default_value' =>t("Enter Your Friend's Name"),
+    '#attributes' => array('style'=>'width:300px;','onfocus' => 'this.select();'),	
+  );
+  
+  $form['inviteFriend']['friendsemail'] = array(
+    '#title' => t("Enter Your Friend&'s E-Mail Address:"),
+    '#type' => 'textfield',
+    '#size' => 75,
+    '#default_value' =>t("Enter Your Friend&'s E-Mail Address"),
+    '#attributes' => array('style'=>'width:300px;','onfocus' => 'this.select();'),	
+  );
+  
+  $form['inviteFriend']['personalmessage'] = array(
+    '#title' => t("Your Personal Message:"),
+    '#type' => 'textfield',
+    '#cols' => 60,
+    '#rows' => 8,
+    '#default_value' =>t("Enter Your Friend&'s E-Mail Address"),
+    '#attributes' => array('style'=>'font-family: monospace;', /*'onkeydown' => 'textCounter(this,this.form.counter,350);'
+						   'onkeyup' =>'textCounter(this,this.form.counter,350);',
+						   'onblur' => 'textCounter(this,this.form.counter,350);',*/
+						),			   
+  );
+  
+  
+ 
+  
+   return  $form;
+  
+}
+
+
+function get_referrer_real_name($uid) {
+        $sql = "SELECT * FROM {hrf_users} WHERE hrf_user_id = %d LIMIT 1;";
+        $res = db_query($sql, $uid);
+        while ($rr = db_fetch_array($res)) {
+        $out = "<input type=\"hidden\" readonly id=\"referringrealname\" name=\"referringrealname\" value=\"".$rr['first_name']." ".$rr['last_name']."\" />";
+        }
+        return($out);
+}
+
+
+function invite_friends_form_validate($form, $form_state){
+	
+	/*$length = strlen($form_state["values"]["keyword"]);
+	if($length!=0 && $length<3){		
+		//form_set_error('title', t('Error'));
+		$data= form_set_error('title', t('Keywords should have a minimum of 3 characters.Please try again!.'));
+		
+		drupal_goto('lightbox/advancesearch');
+	}*/
+}
+
+function invite_friends_form_submit($form, &$form_state){
+	
+}

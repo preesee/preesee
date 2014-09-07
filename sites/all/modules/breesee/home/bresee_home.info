@@ -1,0 +1,8 @@
+; $Id: bresee_home.info $
+name = bresee_home
+description = All custom blocks used Breese
+core = 6.x
+package = Breesee
+dependencies[] = breesee
+
+

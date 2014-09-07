@@ -1,0 +1,77 @@
+.graphic,#prevBtn,#nextBtn,#fullscreen1prev,#fullscreen1next {
+	margin:0;
+	padding:0;
+	display:block;
+	overflow:hidden;
+	text-indent: -8000px;
+}
+#container {
+	margin:0 auto;
+	position:relative;
+	text-align:left;
+	height: 260px;
+	background:#fff;
+}
+#container img {
+	outline:none;
+}
+#content {
+	position: relative;
+}
+#fullscreen {
+	margin-left:0;
+	height: 260px;
+	float:left;
+}
+#fullscreen ul,#fullscreen li,#fullscreen2 ul,#fullscreen2 li {
+	margin:0;
+	list-style:none;
+}
+#fullscreen2 {
+	margin-top:1em;
+}
+#fullscreen li,#fullscreen2 li {
+	left:100px!important;
+	width: 978px;
+	height:260px;
+}
+#prevBtn,#nextBtn,#fullscreen1next,#fullscreen1prev {
+	display:block;
+	width:30px;
+	height:77px;
+	position:absolute;
+	left:0px;
+	z-index:1000;
+}
+#prevBtn {
+    height: 158px !important;
+    left: 0;
+    opacity: 0.5;
+    padding-top: 100px !important;
+    top: 0 !important;
+    width: 100px;
+}
+#nextBtn,#fullscreen1next {
+    height: 158px !important;
+    left: 878px;
+    opacity: 0.5;
+    padding-top: 100px !important;
+    right: 0;
+    top: 0 !important;
+    width: 100px;
+}
+#prevBtn a,#nextBtn a,#fullscreen1next a,#fullscreen1prev a {
+	display:block;
+	position:relative;
+	width:100px;
+	height:77px;
+}
+#prevBtn a,#fullscreen1prev a {
+	background: url("../images/prev.jpg") no-repeat scroll 0 0 transparent;
+}
+#nextBtn a,#fullscreen1next a {
+	background: url("../images/next.jpg") no-repeat scroll 60px 0 transparent;
+}
+#statics {
+	float:right;
+}

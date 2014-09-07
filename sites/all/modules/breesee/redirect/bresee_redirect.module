@@ -1,0 +1,19 @@
+<?php
+// $Id: bresee_helper.module $
+/**
+**	
+*/
+
+//function bresee_redirect_perm()
+//{
+//	return array('access bresee_redirect',);
+//}
+//
+//
+//function bresee_redirect_form_alter(&$form, $form_state, $form_id) {
+//  switch ($form_id) {
+//    case 'product_node_form':
+//        $form['#redirect'] = 'productreview';
+//      break;
+//  }
+//}

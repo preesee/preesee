@@ -1,0 +1,13 @@
+; $Id: breesee.info $
+name = Breesee
+description = Breese ..
+core = 6.x
+package = Breesee
+dependencies[] = modalframe
+
+; $Id: $
+;name = breesee Export Module
+;description = Exports some views of breesee
+;dependencies[] = views
+;core = 6.x
+;package = Breesee

@@ -1,0 +1,106 @@
+<?php
+
+// $Id: emaillogin.module $
+
+
+
+function emaillogin_form_alter(&$form, $form_state, $form_id) {
+	switch ($form_id) {
+		case 'user_login':
+    case 'user_login_block':
+			array_unshift($form['#validate'],'emaillogin_makelogin');
+			break;
+	}
+}
+
+function emaillogin_makelogin(&$form, $form_state, $form_id)	 {
+	//print_r($form_state);
+	$mails = $form_state['values']['name'];
+	$pass = $form_state['values']['pass'];
+	$mdpass = md5($pass);
+	$m = 0;
+	if(valid_email_address($mails)) {
+		$m = db_result(db_query("select count(*) from {users} where mail = '$mails' AND pass = '$mdpass' "));
+	}
+	if($m == 1) {
+		global $user;
+		$userk = user_load(array('mail' => $mails, 'status' => 1));
+		$user = drupal_clone($userk);
+		drupal_goto('user/home');
+	}
+	
+}
+
+
+
+
+function breesee_user_login_form() {
+	$form = array();
+	//echo arg(3);
+	//exit();
+	global $user;
+	$form['breesee_uname'] = array(
+	'#type' => 'textfield',
+	'#title' => t('Email or Username'),
+	'#maxlength' => 60,
+	'#default_value' => '',
+	'#required' => TRUE,
+	);
+	$form['breesee_password'] = array(
+	'#type' => 'password',
+	'#title' => t('Your Password'),
+	'#maxlength' => 60,
+	'#required' => TRUE,
+	);
+
+	$form['breesee_submit'] = array(
+	'#type' => 'submit',
+	'#value' => t('Log In'),
+	'#attributes' => array('id' => 'user_registration input'),
+	);
+	return $form;
+}
+
+//function breesee_user_login_form_validate($form, $form_state) {
+//	$badWords = array("/delete/i", "/update/i","/union/i","/insert/i","/drop/i","/http/i","/--/i");
+//	$breesee_uname = preg_replace($badWords, "", $form_state['values']['breesee_uname']);
+//	$breesee_password = preg_replace($badWords, "", $form_state['values']['breesee_password']);
+//	
+//	$length = strlen($breesee_uname);
+//		if($length==0 ){	
+//			form_set_error('breesee_uname', t('Username is required.'));
+//		}
+//	$lengths = strlen($breesee_password);	
+//	
+//	if($lengths==0 ){	
+//			form_set_error('breesee_password', t('Password is required.'));
+//	}
+//	
+//	
+//}
+
+function breesee_user_login_form_submit($form, $form_state) {
+	$badWords = array("/delete/i", "/update/i","/union/i","/insert/i","/drop/i","/http/i","/--/i");
+	$breesee_uname = preg_replace($badWords, "", $form_state['values']['breesee_uname']);
+	$breesee_password = preg_replace($badWords, "", $form_state['values']['breesee_password']);
+	$mdpass = md5($breesee_password);
+	$m = 0;
+	$m = db_result(db_query("select count(*) from {users} where (name = '$breesee_uname' OR mail = '$breesee_uname') AND pass = '$mdpass' AND status = 1 "));
+	if($m == 1) {
+		global $user;
+		if(valid_email_address($breesee_uname))
+			$userk = user_load(array('mail' => $breesee_uname, 'status' => 1));
+		else 
+			$userk = user_load(array('name' => $breesee_uname, 'status' => 1));
+		$user = drupal_clone($userk);
+		drupal_set_message('Login successfull', 'status');
+		drupal_goto('user/home');
+	}
+	else {
+		drupal_set_message('Login failed. Please verify Credentials', 'error');
+	}
+	
+}
+
+
+?>

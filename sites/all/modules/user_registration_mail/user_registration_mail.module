@@ -1,0 +1,130 @@
+<?php // $Id: user_registration_mail.module,v 1.1 2011/02/08 00:01:15 newzeal Exp $ 
+function user_registration_mail_enable() {
+  // We give the module added weight so that it runs after other modules
+  db_query("UPDATE {system} SET weight=5 WHERE name='user_registration_mail'");
+}
+function user_registration_mail_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#user_registration_mail':
+      return '<p>A module to customize registration emails per role</p>';
+  }
+}
+
+function user_registration_mail_form_alter(&$form, &$form_values, $form_id) {
+  global $user;
+  if ($form_id == "user_register") {
+    $form['#submit'][] = 'user_registration_email_register_submit';    
+  }
+  if ($form_id=="user_admin_settings") {
+    //  Get any extra tokens available
+	$tokens = array();
+	$extra = '';
+    foreach (module_implements('user_registration_mail_tokens') as $module) {
+      $func = $module.'_user_registration_mail_tokens';
+      if ($func($user)) $tokens += $func($user);
+    }
+	$description = t('Available variables are:') .' !username, !site, !password, !uri, !uri_brief, !mailto, !date, !login_uri, !edit_uri, !login_url';
+	foreach ($tokens as $string => $token) $extra .= $string.' ';
+	if ($extra != '') $description .= t('and the following extra tokens:').' '.$extra;
+    //  Unset the drupal email  verification field
+	$form['registration']['user_email_verification']['#default_value']==0;
+	$form['registration']['user_email_verification']['#disabled'] = 'disabled';
+	$form['registration']['user_email_verification']['#description'] = '<b>'.t('You have installed the User Registration email module which over-rides the default drupal settings for email verification.  If this checkbox is currently ticked, then it should become unticked once this form is submitted.').'</b>';
+	$form['user_registration_email'] = array(
+	  '#type' => 'fieldset',
+	  '#title' => t('User Registration Emails'),
+	  '#collapsed' => TRUE,
+	  '#collapsible' => TRUE,
+	  '#weight' => 0
+	);
+	// Get all member roles and remove the default authentication
+	$roles = user_roles(TRUE);
+	unset($roles[DRUPAL_AUTHENTICATED_RID]);
+	foreach ($roles as $rid => $role) {
+	  $default = _user_mail_text('register_no_approval_required_subject');
+	  $form['user_registration_email']['user_registration_email_subject_'.$rid] = array(
+	    '#type' => 'textfield',
+	    '#title' => $role,
+	    '#default_value' => variable_get('user_registration_email_subject_'.$rid, $default),
+	    '#description' => $description,
+	  );
+	  $default = _user_mail_text('register_no_approval_required_body');
+	  $form['user_registration_email']['user_registration_email_body_'.$rid] = array(
+	    '#type' => 'textarea',
+	    '#title' => $role,
+	    '#default_value' => variable_get('user_registration_email_body_'.$rid, $default),
+	    '#description' => $description,
+	  );
+	}
+	$form['#submit'][] = 'user_registration_email_settings_submit';
+  }
+}
+function user_registration_email_settings_submit($form, $form_state) {
+  // We set the default verification to zero to ensure that it is disabled.
+  //variable_set('user_email_verification', 1);
+  variable_set('user_mail_register_no_approval_required_notify', 0);
+  variable_set('user_mail_register_pending_approval_required_notify', 0);
+  variable_set('user_mail_register_admin_created_notify', 0);
+}
+function user_registration_email_register_submit($form, $form_state) {
+  $rid = 0;
+  // First check the user object
+  foreach ($form_state['user']->roles as $key => $role) {
+	if ($key != 2) $rid = $key;
+  }
+  
+  if ($rid == 0) {
+    // registration_role_with_approval module.  This is not a good solution since users can select more than one role.  The radio option is better.
+    if (is_array($form_state['profile_roles'])) {
+      foreach ($form_state['profile_roles'] as $role) {
+	    if ($role > 0) $rid = $role;
+	  }
+    }
+    // registration_role_with_approval with radios instead of checkboxes
+    elseif (isset($form_state['profile_roles'])) $rid = $form_state['profile_roles'];
+	// finally see if it is in the dbase
+    if (!$rid > 0) $rid = db_result(db_query("SELECT rid FROM {users_roles} WHERE uid=%d", $form_state['user']->uid));
+  }
+  if ($rid > 0) user_registration_mail_notify($rid, $form_state['user']);
+}
+/**
+ * Implementation of hook_mail().
+ */
+function user_registration_mail_mail($rid, &$message, $params) {
+  $language = $message['language'];
+  $variables = user_mail_tokens($params['account'], $language);
+  foreach (module_implements('user_registration_mail_tokens') as $module) {
+    $func = $module.'_user_registration_mail_tokens';
+    if ($func($params['account'])) $variables += $func($params['account']);
+  }
+  $message['subject'] .= _user_registration_mail_text('user_registration_email_subject_'.$rid, $language, $variables);
+  $message['body'][] = _user_registration_mail_text('user_registration_email_body_'.$rid, $language, $variables);
+}
+/**
+ * Returns a mail string for a variable name.
+ *
+ * Used by user_mail() and the settings forms to retrieve strings.
+ */
+function _user_registration_mail_text($key, $language = NULL, $variables = array()) {
+  $langcode = isset($language) ? $language->language : NULL;
+  return t(variable_get($key,''), $variables, $langcode);
+}
+
+function user_registration_mail_notify($rid, $account, $language = NULL) {
+  $params['account'] = $account;
+  $language = $language ? $language : user_preferred_language($account);
+  $mail = drupal_mail('user_registration_mail', $rid, $account->mail, $language, $params);
+  $notify_admin = FALSE;
+  // We have this module installed with custom approval settings
+  if (module_exists('registration_role_with_approval')) {
+	if (in_array($rid, variable_get('registration_role_with_approval_profile_roles_approval', $default_value))) $notify_admin = TRUE;
+  }
+  // or we use the global settings
+  elseif (variable_get('user_register', 1) == 2) $notify_admin = TRUE;
+  if ($notify_admin) {
+    // If a user registered requiring admin approval, notify the admin, too.
+    // We use the site default language for this.
+    drupal_mail('user', 'register_pending_approval_admin', variable_get('site_mail', ini_get('sendmail_from')), language_default(), $params);
+  }
+  return empty($mail) ? NULL : $mail['result'];
+}

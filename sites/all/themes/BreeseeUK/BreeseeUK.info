@@ -1,0 +1,35 @@
+name = BreeseeUK
+description = Tableless, recolorable, multi-column, fluid width theme (default).
+version = VERSION
+core = 6.x
+engine = phptemplate
+stylesheets[all][] = css/style_new.css
+stylesheets[all][] = css/helper.css
+stylesheets[all][] = css/tpl.css
+stylesheets[all][] = css/print.css
+
+scripts[] = js/register.js
+scripts[] = js/common.js
+scripts[] = js/leftmenu.js
+scripts[] = js/divgrow.js
+scripts[] = js/blog.js
+scripts[] = js/cpoll.js
+
+
+regions[left] = Left Side
+regions[right] = Right Side
+regions[content] = Content
+regions[sliders] = Image Slider
+regions[dropdown] = User Dropdown Submenu
+regions[contentarea] = Content Area
+
+regions[torpmenu] = Top Right Menu
+regions[breeseemenu] = Breesee Menu
+regions[breeseesrch] = Breesee Search
+
+regions[leftbottomfb] = Footer FaceBook
+regions[translation] = International
+regions[footer_lmenu] = Footer Menu Left
+regions[footer_social] = Footer Social
+
+regions[reg_login_block] = Login Block Regn page

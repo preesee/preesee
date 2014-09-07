@@ -1,0 +1,177 @@
+<?php
+
+/**
+ * Implementation of hook_menu().
+ */
+function markitup_menu() {
+  return array(
+    'admin/settings/markitup/field' => array(
+      'title' => 'Toggle field',
+      'page callback' => 'markitup_toggle_field',
+      'access arguments' => array('administer markitup'),
+      'type' => MENU_CALLBACK,
+    ),
+    'admin/settings/markitup' => array(
+      'title' => 'markItUp! settings',
+      'description' => t('Modify the skin and set the markItUp! editor should use.'),
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('markitup_settings'),
+      'access arguments' => array('administer markitup'),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function markitup_perm() {
+  return array('administer markitup', 'use markitup editor');
+}
+
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function markitup_form_alter(&$form, $form_state, $form_id) {
+  static $js_added = FALSE;
+  if (user_access('use markitup editor')) {
+    $miu_active = variable_get('markitup_active', _markitup_active());
+    if (isset($miu_active[$form['#id']]) || user_access('administer markitup')) {
+      if (!$js_added) {
+        $set = variable_get('markitup_set', 'default');
+        $skin = variable_get('markitup_skin', 'markitup');
+        $miu_location = drupal_get_path('module', 'markitup');
+        drupal_add_js('sites/all/libraries/markitup/markitup/jquery.markitup.js');
+        drupal_add_js("sites/all/libraries/markitup/markitup/sets/{$set}/set.js");
+        drupal_add_css($miu_location . '/markitup.css');
+        // For some reason, these CSS files aren't added if the second param of
+        // drupal_add_css() is 'module' (which it is by default), so we'll lie
+        // and say they're theme CSS files, even though they aren't.
+        drupal_add_css("sites/all/libraries/markitup/markitup/skins/{$skin}/style.css", 'theme');
+        drupal_add_css("sites/all/libraries/markitup/markitup/sets/{$set}/style.css", 'theme');
+        drupal_add_js($miu_location . '/markitup.js');
+        if (user_access('administer markitup')) {
+          drupal_add_js($miu_location . '/markitup.admin.js');
+        }
+        $js_added = TRUE;
+      }
+      if (isset($miu_active[$form['#id']])) {
+        drupal_add_js(array('markItUpActiveIds' => $miu_active[$form['#id']]), 'setting');
+      }
+    }
+  }
+}
+
+/**
+ * Settings form. drupal_get_form() callback.
+ */
+function markitup_settings() {
+  // Get a list of available sets
+  $sets = array();
+  if (is_dir('sites/all/libraries/markitup/markitup/sets') && $f = opendir('sites/all/libraries/markitup/markitup/sets')) {
+    while (($sub = readdir($f)) !== FALSE) {
+      if ($sub[0] !== '.' && is_dir('sites/all/libraries/markitup/markitup/sets/' . $sub)) {
+        $sets[$sub] = $sub;
+      }
+    }
+    closedir($f);
+  }
+  else {
+    drupal_set_message(t('The <em>sets</em> directory could not be scanned. Does it exist? Does it have sane permissions?'), 'error');
+  }
+  // Same for skins
+  $skins = array();
+  if (is_dir('sites/all/libraries/markitup/markitup/skins') && $f = opendir('sites/all/libraries/markitup/markitup/skins')) {
+    while (($sub = readdir($f)) !== FALSE) {
+      if ($sub[0] !== '.' && is_dir('sites/all/libraries/markitup/markitup/skins/' . $sub)) {
+        $skins[$sub] = $sub;
+      }
+    }
+    closedir($f);
+  }
+  else {
+    drupal_set_message(t('The <em>skins</em> directory could not be scanned. Does it exist? Does it have sane permissions?'), 'error');
+  }
+
+  return system_settings_form(array(
+    'markitup_set' => array(
+      '#type' => 'select',
+      '#title' => t('Set'),
+      '#description' => t('Sets should be installed in <em>sites/all/libraries/markitup/markitup/sets</em>.'),
+      '#options' => $sets,
+      '#default_value' => variable_get('markitup_set', 'default'),
+      '#weight' => 0,
+    ),
+    'markitup_skin' => array(
+      '#type' => 'select',
+      '#title' => t('Skin'),
+      '#description' => t('Skins should be installed in <em>sites/all/libraries/markitup/markitup/skins</em>.'),
+      '#options' => $skins,
+      '#default_value' => variable_get('markitup_skin', 'markitup'),
+      '#weight' => 0,
+    ),
+  ));
+}
+
+/**
+ * Save the on-ness or off-ness of a field. JSON callback.
+ */
+function markitup_toggle_field() {
+  $miu_active = variable_get('markitup_active', _markitup_active());
+  if ($_GET['switch'] === 'off' && isset($miu_active[$_GET['form']]) && ($keypos = array_search($_GET['field'], $miu_active[$_GET['form']])) !== FALSE) {
+    unset($miu_active[$_GET['form']][$keypos]);
+    if (!count($miu_active[$_GET['form']])) {
+      unset($miu_active[$_GET['form']]);
+    }
+  }
+  elseif ($_GET['switch'] === 'on' && (!isset($miu_active[$_GET['form']]) || !in_array($_GET['field'], $miu_active[$_GET['form']]))) {
+    if (!isset($miu_active[$_GET['form']])) {
+      $miu_active[$_GET['form']] = array($_GET['field']);
+    }
+    else {
+      $miu_active[$_GET['form']][] = $_GET['field'];
+    }
+  }
+  variable_set('markitup_active', $miu_active);
+  die(drupal_to_js(array('switched' => $_GET['switch']/* , 'current' => $miu_active */))); 
+}
+
+/**
+ * Implementation of hook_requirements().
+ */
+function markitup_requirements($phase) {
+  if ($phase === 'runtime') {
+    if (file_exists('sites/all/libraries/markitup/markitup/jquery.markitup.js')) {
+      return array(
+        'markitup' => array(
+          'title' => t('markItUp! library'),
+          'description' => t('The markItUp! library appears to be installed correctly.'),
+          'value' => t('Installed'),
+          'severity' => REQUIREMENT_OK,
+        ),
+      );
+    }
+    else {
+      return array(
+        'markitup' => array(
+          'title' => t('markItUp! library'),
+          'value' => t('Not installed'),
+          'description' => t('The markItUp! library does not appear to be installed correctly. Please <a href="http://markitup.jaysalvat.com/downloads/">download markItUp!</a> and install the archived directory at <em>sites/all/libraries/markitup</em> (so the full path to the markItUp! library file is <em>sites/all/libraries/markitup/markitup/jquery.markitup.js</em>).'),
+          'severity' => REQUIREMENT_ERROR,
+        ),
+      );
+    }
+  }
+}      
+
+/**
+ * Cheater function to return default values for markitup_active variable.
+ */
+function _markitup_active() {
+  return array(
+    'node-form' => array(
+      'edit-body',
+    ),
+  );
+}
+

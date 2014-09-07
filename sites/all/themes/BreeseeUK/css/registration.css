@@ -1,0 +1,527 @@
+/*------------[CREATOR REGISTRATION STEP1 STARTS HERE]------------*/
+.creator_regstep1{
+	width:821px;
+	margin:auto;
+	overflow:hidden;
+	border-bottom:1px dotted #999999;
+}
+.logo_creator_acc {
+    float: left;
+    height: 73px;
+    padding: 0 16px 0 0;
+    width: 124px;
+}
+.text_log_creator_acc {
+    color: #000102;
+    float: left;
+    font: bold 24px Arial,Helvetica,sans-serif;
+    overflow: hidden;
+    padding: 43px 0 0;
+    width: 646px;
+}
+.applic_proces{
+	font:bold 30px Arial, Helvetica, sans-serif;
+	color:#5fa9f3;
+	padding:19px 0 0 0;
+	float:left;
+}
+.stepsss{
+	float:left;
+	overflow:hidden;
+	padding: 27px 0 18px;
+}
+
+.tabs2 {
+    background: none repeat scroll 0 0 #E1E1E1;
+	padding:0 14px 0 0;
+}
+.tabs3 {
+    background: none repeat scroll 0 0 #E1E1E1;
+	padding:0 14px 0 0;
+}
+.tabs1, .tabs2, .tabs3, .tabs4{ 
+    display: block;
+    float: right;
+    height: 32px;
+    width: 132px;
+}
+.tabs1 {
+    background:url(../images/creator_account/step_.jpg) no-repeat right top #8EC63F;
+	padding:0 14px 0 0;
+}
+.tabs3:hover, .tabs2:hover{
+	background:url(../images/creator_account/step_.jpg) no-repeat right top #8EC63F;
+	border-radius: 2px 0 0 2px;
+	padding:0 14px 0 0;
+}
+.tabs1 .ch_inner1 span h1 {
+    color: #FFFFFF;
+    font: 30px "Californian FB","times New Roman";
+}
+.tabs1 .ch_inner1 span p {
+    color: #FFFFFF;
+    font: 10px/13px "Times New Roman",Times,serif;
+    text-transform: uppercase;
+}
+
+.tabs2 .ch_inner1 span h1 {
+    color: #898989;
+    font: 30px "Californian FB","times New Roman";
+}
+.tabs2 .ch_inner1 span p {
+    color: #898989;
+    font: 10px/13px "Times New Roman",Times,serif;
+ } 
+
+.tabs3 .ch_inner1 span h1 {
+    color: #898989;
+    font: 30px "Californian FB","times New Roman";
+}
+.tabs2 .ch_inner1 span p {
+    color: #898989;
+    font: 10px/13px "Times New Roman",Times,serif;
+ } 
+.tabs4 {
+    background:url(../images/creator_account/step_white.jpg) no-repeat scroll right top #8EC63F;
+    padding: 0 14px 0 0;
+}
+.tabs4 .ch_inner1 span h1 {
+    color: #FFFFFF;
+    font: 30px "Californian FB","times New Roman";
+}
+.tabs4 .ch_inner1 span p {
+    color: #FFFFFF;
+    font: 10px/13px "Times New Roman",Times,serif;
+    text-transform: uppercase;
+}
+
+
+.ch4 {
+    float: left;
+    padding: 10px 0 0;
+    text-align: left;
+    width: 92px;
+}
+.tabs2:hover .ch_inner1 span p {
+    color: #FFFFFF;
+    font: 10px/13px "Times New Roman",Times,serif;
+    text-transform: uppercase;
+}
+.tabs2:hover .ch_inner1 span h1 {
+    color: #FFFFFF;
+    font: 30px "Californian FB","times New Roman";
+}
+
+.tabs3:hover .ch_inner1 span p {
+    color: #FFFFFF;
+    font: 10px/13px "Times New Roman",Times,serif;
+    text-transform: uppercase;
+}
+.tabs3:hover .ch_inner1 span h1 {
+    color: #FFFFFF;
+    font: 30px "Californian FB","times New Roman";
+}
+.corner3{
+	border-radius: 2px 0 0 2px;
+	margin: 0 0 0 10px;
+}
+
+.corner{
+	border-radius: 0 2px 2px 0;
+}
+
+
+
+
+.steps_coverdiv{
+	margin: auto;
+    overflow: hidden;
+    padding: 0 0 10px;
+    width: 821px;
+}
+.steps_coverdiv h1{
+	font:bold 18px Arial, Helvetica, sans-serif;
+	color:#5fa9f3;
+	padding:32px 0;
+}
+.steps_coverdiv h6 {
+    color: #5FA9F3;
+    font: bold 18px Arial,Helvetica,sans-serif;
+    padding: 32px 0 12px;
+}
+.warning{
+	width:470px;
+	background:#f5f6f7;
+	padding:10px;
+}
+.warniong_textfield{
+	width:382px;
+	height:22px;
+	background:#FFFFFF;
+	border:1px solid #8c8c8c;
+	margin:0 0 10px 0;
+}
+.warning h2 a{
+	font:bold 12px Arial, Helvetica, sans-serif;
+	color:#55a4f2;
+	letter-spacing:.25px;
+}
+.warning h2 a:visited{
+	color:355a4f2;
+}
+.warning h2 a:hover{
+	color:#003b76;
+	text-decoration:underline;
+}
+.warning p{
+	font:10px Arial, Helvetica, sans-serif;
+	color:#5d5d5d;
+}
+.warn_cover{
+	overflow:hidden;
+	padding:0 0 5px;
+}
+.warn_cover span{
+	display:block;
+	float:left;
+}
+.war_atag{
+	background:#fb3b49;
+	width:67px;
+	height:16px;
+	padding:5px 0 0 0;
+	text-align:center;
+	border-radius: 2px 2px 2px 2px;
+}
+.war_atag a{
+	font:10px "Arial Black", Arial, "Arial Narrow";
+	color:#ffffff;
+	letter-spacing:.2px;
+	text-transform:uppercase;
+}
+.text_ptag{
+	width:380px;
+	padding:0 0 0 15px;
+}
+.text_ptag p{
+	font:11px/13px Arial, Helvetica, sans-serif;
+	color:#bb6161;
+}
+.text_ptag p a{
+	color:#5fa9f3;
+}
+.steps_coverdiv h5{
+	font:bold 10px Arial, Helvetica, sans-serif;
+	color:#626262;
+	margin:-10px 0 0 150px;
+}
+.steps_coverdiv h3{
+	font:bold 10px Arial, Helvetica, sans-serif;
+	color:#626262;
+	margin: 0 0 0 10px;
+}
+.steps_coverdiv h4 {
+    color: #626262;
+    font: bold 10px Arial,Helvetica,sans-serif;
+    padding: 0 0 0 148px;
+}
+.steps_coverdiv h3 b{
+	color:#ec008c;
+	font:11px Arial, Helvetica, sans-serif;
+}
+.forms_steps{
+	overflow:hidden;
+	margin:10px 0;
+}
+.fields_steps{
+	overflow:hidden;
+	padding:5px 0;
+}
+.fields_steps li{
+	float:left;
+	overflow:hidden;
+	padding:0 0 10px 0;
+}
+.first_leftnames{
+	width:121px;
+	text-align:right;
+	margin:0 28px 0 0;
+	font:12px Arial, Helvetica, sans-serif;
+	color:#55a4f2;
+}
+.second_rightfields{
+	width:280px;
+}
+.second_rightfields b{
+	color:#ec008c;
+	font:11px Arial, Helvetica, sans-serif;
+}
+.steps_cr_text_ara{
+	background:#FFFFFF;
+	border:1px solid #8c8c8c;
+	width:261px;
+	height:81px;
+}
+.select_crt_steps{
+	width:261px;
+	height:21px;
+	background:#FFFFFF;
+	border:1px solid #8c8c8c;
+}
+.crt_act_steps_field{
+	width:261px;
+	height:21px;
+	background:#FFFFFF;
+	border:1px solid #8c8c8c;
+}
+.next_step_btn{
+	height:74px;
+	text-align:right;
+}
+.next_step_btn a{
+	display:block;
+	width:194px;
+	height:74px;
+	background:url(../images/creator_account/next_stap.jpg) no-repeat left top;
+	text-indent:-9999px;
+	float:right;
+	font:0px Arial, Helvetica, sans-serif;
+	color:#CC6600;
+	margin:0 32px 0 0;
+ }
+/*------------[CREATOR REGISTRATION STEP1 CLOSED HERE]------------*/
+/*------------[CREATOR REGISTRATION STEP2 STARTS HERE]------------*/
+.step2_cover_div{
+	margin: auto;
+    overflow: hidden;
+    padding: 0 0 10px 10px;
+    width: 794px;
+}
+.step2_cover_div h1{
+	color: #5FA9F3;
+    font: bold 18px Arial,Helvetica,sans-serif;
+    padding: 32px 0 18px 17px;
+}
+.step2_cover_div p{
+	 font: 12px Arial,Helvetica,sans-serif;
+	 color:#212121;
+	 padding:0 0 0 22px;
+}
+.sample_images{
+	overflow:hidden;
+	margin:12px 0 0 22px;
+}
+.sample_cover{
+	overflow:hidden;
+}
+.sample_photo{
+	width:181px;
+	height:130px;
+	margin:0 37px 0 0;
+	float:left;
+}
+.sample_images h1{
+	font:11.5px Arial, Helvetica, sans-serif;
+	color:#55a4f2;
+	padding: 15px 0 15px 80px;
+}
+.step2_cover_div h2{
+	font:bold 12px Arial, Helvetica, sans-serif;
+	color:#212121;
+	padding:0 0 0 22px;
+}
+.upload_fields{
+	overflow:hidden;
+	background:#f0f9ff;
+	padding:18px 11px 25px 27px;
+	width: 721px;
+	margin:10px 0 0 0;
+}
+.upload_fields span{
+	float:left;
+	display:block;
+}
+.item_column{
+	width:68px;
+	text-align:center;
+}
+.item_column p{
+	font:bold 12px Arial, Helvetica, sans-serif;
+	color:#212121;
+	margin:0px;
+	padding:0px;
+}
+.item_column h1{
+	color: #EC008C;
+    font: 18px Arial,Helvetica,sans-serif;
+    padding: 22px 0 0;
+}
+.choose_file{
+	width:280px;
+	padding:32px 0 0 0;
+	font:12px Arial, Helvetica, sans-serif;
+	color:#212121;
+}
+.upload_discription{
+	width:373px;
+}
+.photo_upload_btn{
+	margin:5px 10px 0 0;
+}
+.upload_discription p{
+	padding:0 0 12px 0;
+	font:12px Arial, Helvetica, sans-serif;
+	color:#212121;
+	margin:0px;
+}
+.discription_textarea{
+	width:366px;
+	height:90px;
+	border:1px solid #d9d9d9;
+}
+.all_field_importent{
+	padding:17px 0 44px;
+}
+/*------------[CREATOR REGISTRATION STEP1 CLOSED HERE]------------*/
+
+/*------------[CREATOR REGISTRATION STEP3 STARTS HERE]------------*/
+.step3_cover_div {
+    overflow: hidden;
+    width: 831px;
+	margin: 0 0 0 78px;
+}
+.step3_cover_div h1{
+	font:24px Arial, Helvetica, sans-serif;
+	color:#55a4f2;
+	padding:27px 0 0;
+}
+.you_are_expert{
+	overflow:hidden;
+	padding:26px 0 0;
+}
+.left_you{
+	width:172px;
+	height:30px;
+	float:left;
+	font:18px Arial, Helvetica, sans-serif;
+	color:#55a4f2;
+	text-align:right;
+}
+.middle_you{
+	float:left;
+	width:470px;
+	height:22px;
+	margin:0 0 0 30px;
+}
+.right_you{
+	width:156px;
+	float:left;
+	padding: 5px 0 0;	
+}
+.right_you a{
+	font:14px Arial, Helvetica, sans-serif;
+	color:#8dc63f;
+	background:url(../images/user_regi_step3/settings.jpg) no-repeat left 1px;
+	padding:0 0 0 18px;
+}
+.you_are_discription{
+	overflow:hidden;
+	padding:15px 0;
+}
+.left_you_discription{
+	float:left;
+	width:172px;
+	font:12px Arial, Helvetica, sans-serif;
+	color:#55a4f2;
+	overflow:hidden;
+	display:block;
+	text-align:right;
+}
+.right_you_discription{
+	width:628px;
+	padding:0 0 0 30px;
+	font:bold 12px/14px Arial, Helvetica, sans-serif;
+	color:#000000;
+	overflow:hidden;
+	display:block;
+}
+.art_disply{
+	overflow:hidden;
+	padding:30px 0 0px;
+}
+.art_disply img{
+	float:left;
+	margin:0 33px;
+}
+.submit_step3_btn {
+    height: 74px;
+    text-align: right;
+}
+.submit_step3_btn a {
+    background:url(../images/user_regi_step3/submit_step3.jpg) no-repeat scroll left top transparent;
+    color: #CC6600;
+    display: block;
+    float: right;
+    font: 0 Arial,Helvetica,sans-serif;
+    height: 74px;
+    margin: 0 32px 0 0;
+    text-indent: -9999px;
+    width: 194px;
+}
+/*------------[CREATOR REGISTRATION STEP3 CLOSED HERE]------------*/
+
+/*------------[CREATOR REGISTRATION STEP4 STARTS HERE]------------*/
+.apps_cover_step{
+	overflow:hidden;
+	padding:0 0 22px 0;
+}
+.apps_steps p{
+	margin: 5px 10px 18px 0;
+	font:12px/18px Arial, Helvetica, sans-serif;
+	color:#626262;
+}
+.apps_steps p a{
+	color:#5fa9f3;
+}
+.apps_steps p a:hover{
+	text-decoration:underline;
+}
+.goto_your_step4_btn {
+    height: 74px;
+    text-align: right;
+}
+.goto_your_step4_btn a {
+    background:url(../images/user_regi_step4/goto_btn.jpg) no-repeat scroll left top transparent;
+    color: #CC6600;
+    display: block;
+    float: right;
+    font: 0 Arial,Helvetica,sans-serif;
+    height: 74px;
+    margin: 0 32px 0 0;
+    text-indent: -9999px;
+    width: 194px;
+}
+.creator_regstep4 {
+    margin: auto;
+    overflow: hidden;
+    width: 821px;
+}
+
+.connect_other {
+    overflow: hidden;
+    padding: 1px 0;
+}
+.connect_other h1 {
+    color: #55A4F2;
+    font: bold 12px Arial,Helvetica,sans-serif;
+    padding: 10px 0 0 10px;
+}
+.connect_other ul {
+    margin: 5px 0;
+    overflow: hidden;
+    padding: 2px 0;
+}
+.connect_other ul li{
+	float:left;
+}
+/*------------[CREATOR REGISTRATION STEP4 CLOSED HERE]------------*/

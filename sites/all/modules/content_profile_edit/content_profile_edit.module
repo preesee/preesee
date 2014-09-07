@@ -1,0 +1,188 @@
+<?php
+
+// $Id: content_profile_edit.module,v 1.1.2.32 2009/09/23 11:56:50 Solide Exp $
+
+/**
+ * @file
+ * Allows exposure and processing of content_profile node fields at user modification
+ */
+
+/**
+ * Implementation of hook_form_alter().
+ */
+ 
+ 
+function content_profile_edit_form_alter(&$form, &$form_state, $form_id) {
+	global $user;
+  if (($form_id == 'user_profile_form') && ($user->uid != 1)) {
+    require_once drupal_get_path('module', 'node') .'/node.pages.inc';
+
+    // Allow other modules to customize the used profile types, so modules
+    // can easily customize the modification form.
+    //$default_types = content_profile_get_types('names');
+		
+		$default_types = (array)content_profile_edit_checkrole(); // Edit Nikhil
+		
+    $form += array('#content_profile_edit_use_types' => $default_types);
+    foreach ($form['#content_profile_edit_use_types'] as $type => $typename) {
+			//content_profile_edit_modify_profile_form($type, $form, $form_state);
+			content_profile_edit_modify_profile_form($typename, $form, $form_state);
+    }
+	$form['#theme'][0] = 'user_profile_form';
+
+  }
+}
+
+/**
+ * Helper function to return all available fields for a particular content type.
+ *
+ * @param string $type
+ *   The content type to return fields for.
+ * @return array
+ *   Associated fields for the given content type.
+ */
+function _content_profile_edit_get_fields($type) {
+  $typeinfo = content_types($type);
+  return $typeinfo['fields'];
+}
+
+/**
+ * Returns an array of selectable form elements that may be hidden, mostly containing CCK fields.
+ *
+ * @param string $type
+ *   A content type to get the select elements for.
+ * @return Array
+ *   An array of fields suitable for use in a select field.
+*/
+function _content_profile_edit_get_field_select($type) {
+  $fields = module_exists('content') ? _content_profile_edit_get_fields($type) : array();
+  $return = array();
+  if (!module_exists('auto_nodetitle') || auto_nodetitle_get_setting($type) != AUTO_NODETITLE_ENABLED) {
+    $return['title'] = t('Title');
+  }
+  foreach ($fields as $fieldname => $info) {
+    if (!$info['required']) {
+      $return[$fieldname] = drupal_ucfirst($info['widget']['label']);
+    }
+  }
+  $return['other'] = t('Other form elements (except for required CCK fields)');
+  
+  return $return;
+}
+
+function content_profile_edit_modify_profile_form($type, &$form, &$form_state) {
+  // Fetch profile node and add in its form.
+ 
+   
+  $node = content_profile_load($type, $form['#uid']);
+  if (!$node)
+    $node = array('uid' => $form['#uid'], 'type' => $type);
+
+  // Get the original node form.
+  $node_form = drupal_retrieve_form($type .'_node_form', $form_state, $node);
+  drupal_prepare_form($type .'_node_form', $node_form, $form_state);
+	//print_r($node_form);
+  foreach($node_form as $key => $value) {
+    if(in_array($key, array('#id', 'form_id', 'form_token', '#token', '#action', '#parameters', 'author'))) continue;
+    if(in_array($key, array('#submit', '#validate'))) {
+      $form[$key] = array_merge($form[$key], $value);
+      continue;
+    }
+if(!in_array($key,array('uid'))){
+
+   $form[$key] = $value;
+   }
+  }
+   //$form_state['rebuild'] = true;
+  //$form['author']['name']['#default_value'] = $form['account']['name']['#default_value'];
+  //unset($form['uid']);
+  //unset($form['name']);
+  //unset($form['submit']);
+ // unset($form['#submit']);
+ //print_r($form);die;
+  unset($form['#redirect']);
+  $form['#submit'][] = 'content_profile_edit_user_modify_submit';
+  $form['#validate'][] = 'content_profile_edit_user_modify_validate';
+ //echo '<pre>';  print_r($form['#submit']);echo '</pre>';
+  // Remove submit handler here, we only want it to be triggered on save, not on preview.
+  // We will call it ourselves from our save handler.
+	
+  //$form['#submit'] = array_diff($form['#submit'], array('user_profile_form_submit'));
+  //$form['#validate'] = array_diff($form['#validate'], array('user_profile_form_validate'));
+  //$form['#theme'] = 'user_profile_edit';
+  // Also remove node validation.  We will call node_validate ourselves from content_profile_edit_user_modify_validate()
+  
+  
+  $form['#validate'] = array_diff($form['#validate'], array('node_form_validate'));
+ // unset($form['#validate']);
+
+  
+}
+
+
+/**
+ * Validates the user edit form
+ */
+function content_profile_edit_user_modify_validate($form, &$form_state) {
+
+//echo '<pre>';print_r($form_state);die;
+ // echo $form_state['clicked_button']['#id'];die;
+  // Make sure the language setting saves.
+  if ($form_state['clicked_button']['#post']['language']) {
+    $form_state['values']['language'] = $form_state['clicked_button']['#post']['language'];
+  }
+  
+  user_profile_form_validate($form, $form_state);
+  $node = $form['#node'];
+  if($form_state['clicked_button']['#id'] === 'edit-submit'){
+      $node = $node->_account;
+  }
+  require_once drupal_get_path('module', 'node') .'/node.pages.inc';
+  $node->changed = strtotime(date("Y-m-d H:i:s"));
+  unset($node->name);
+  node_validate($node, $form);
+}
+
+/**
+ * Submits the user edit form
+ */
+function content_profile_edit_user_modify_submit($form, &$form_state) {
+/*echo '<pre>';
+print_r($form_state);
+die;*/
+//echo '<pre>';print_r($form);die;
+  if($form_state['clicked_button']['#id'] == 'edit-submit'){
+		$node = $form['#node'];
+	//echo '<pre>';	print_r($form_state['values']['_account']);die;
+     // user_profile_form_submit($form, &$form_state);
+	  global $user;
+     
+	//  $node->uid = $user->uid;
+	
+      $node = node_submit($node, $form);	  
+	 // print_r($node);die;
+      node_save($node, $form);
+  }
+}
+
+
+function content_profile_edit_checkrole(){
+	
+	global $user;
+	$role_arr = $user->roles;
+	if (in_array('audience', $role_arr ) )	{
+		$role = 'audience';
+	}
+	else if (in_array('store', $role_arr ) )	{
+		$role = 'store';
+	}
+	else if (in_array('creator', $role_arr ) )	{
+		$role = 'creators';
+	}
+	else {
+		$role = 'user';
+	}
+	return $role;
+}
+
+

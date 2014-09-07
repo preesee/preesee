@@ -1,0 +1,167 @@
+<?php 
+
+/**
+ * @file
+ *  This module lets an administrator select roles that will be available for selection on registration form. 
+ *  It also allows to select which roles needs admin approval. If user selects such a role during registration his account will be blocked
+ *  until approved by admin.
+ * 
+ *  @author Tamer Al Zoubi [tamerzg@gmail.com]
+ */
+
+
+/**
+*Implementation of hook_menu()
+*/
+
+$roles= array();
+
+function registration_role_with_approval_menu() {
+  
+  
+  
+  $items['admin/settings/registration_role_with_approval'] = array(
+    'title' => 'Registration Role With Approval',
+    'description' => 'Configure Registration Role With Approval.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_registration_role_with_approval_admin_settings_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
+ return $items;
+}
+
+function registration_role_with_approval_form_alter(&$form, $form_state, $form_id){
+
+    
+  
+  if ($form_id=='user_register'){
+                
+      $display_roles= variable_get('registration_role_with_approval_profile_roles',  $roles);
+if (empty($display_roles)){
+    $form['profile_roles'] = array(
+        '#type' => 'checkboxes',
+        '#title' =>'You Must Configure the Module First',
+        '#options' => $roles,
+        );
+}
+else{
+      $approval_roles=variable_get('registration_role_with_approval_profile_roles_approval', $roles);
+    foreach($display_roles as $role){
+    $role_name=db_result(db_query("SELECT name FROM {role} WHERE rid=%d",$role));
+    
+    if(in_array($role,$approval_roles)){
+    $role_name.=" <i>*needs administration approval</i>";
+    }
+    $roles[$role]=$role_name;
+    }
+  	$form['profile_roles'] = array(
+        '#type' => 'checkboxes',
+  	    '#title' =>'Choose a role',
+        '#options' => $roles,
+        );
+  	
+  $form['#submit'][] = '_registration_role_with_approval_register_add_role';
+}  
+}
+  
+}
+
+function _registration_role_with_approval_register_add_role($form, &$form_state){
+	$role_selected=$form_state['values']['profile_roles'];
+	$uid=$form_state['user']->uid;
+$username=$form_state['user']->name;
+
+	$approval_roles=variable_get('registration_role_with_approval_profile_roles_approval', $roles);
+	
+	foreach($role_selected as $rid=>$value){
+		if($value!="0"){
+		    db_query('INSERT INTO {users_roles} VALUES (%d, %d)',$uid,$rid);
+		if(in_array($rid,$approval_roles)){
+            //Block account until approved by administrator
+            db_query("UPDATE {users} SET status=0 WHERE uid = %d", $uid);
+          $user_approval[]=$rid;
+    
+        }
+		}
+	}
+
+  // Send email notification to administrator
+  if (!empty($user_approval)){
+     $params = array(
+    'username' => $username,
+    'user_approval' => $user_approval,
+     );
+        
+    $admin=user_load(1);
+    $email=$admin->mail;
+    drupal_mail('registration_role_with_approval', 'registration', $email, language_default(), $params);
+}
+}
+
+
+function registration_role_with_approval_mail($key, &$message, $params) {
+ switch ($key) {
+    case 'registration':
+      // note: data can be passed to this function in the $params array
+       $output="Name: ".$params['username'];
+        $output.=" had request a role that need your confirmation. ";
+       $output.="Role(s) that need your approvals: ";
+       $i=0;
+       foreach($params['user_approval'] as $user_approval){
+       $role_name=db_result(db_query("SELECT  name FROM {role} WHERE rid=%d",$user_approval));
+       if ($i==0){
+$output.=$role_name;
+       }
+       else
+       $output.=", ".$role_name;
+       $i++;
+         //$output.=$params['approval_roles'];  
+       }
+      $message['subject'] = t('New Roles Request');
+      $message['body'] = t($output);
+      break;   
+  }
+}
+
+/**
+ * Registration Role With Approval admin settings form.
+ *
+ * @return
+ * The settings form used by Registration Role With Approval.
+ */
+function _registration_role_with_approval_admin_settings_form() { 
+	
+	//Obtain all roles
+
+	$result=db_query("SELECT * FROM {role} WHERE rid>2");
+if ($result==TRUE){
+	while($role=db_fetch_array($result)){
+	$roles[$role['rid']]=$role['name'];
+	$default_value[$role['rid']]=0;
+	}
+	
+	
+	$form['registration_role_with_approval_profile_roles'] = array(
+        '#type' => 'checkboxes',
+        '#title' =>'Roles',
+        '#options' => $roles,
+        '#description' => "Choose roles that will be displayed on registration form",
+	    '#default_value' => variable_get('registration_role_with_approval_profile_roles',  $default_value),
+        );
+	
+    $form['registration_role_with_approval_profile_roles_approval'] = array(
+        '#type' => 'checkboxes',
+        '#title' =>'Approval Roles',
+        '#options' => $roles,
+        '#description' => "Choose roles that needs administration approval. Users that select this role during registration will 
+        be disabled until administrator approves them.",
+        '#default_value' => variable_get('registration_role_with_approval_profile_roles_approval', $default_value),
+        );
+  
+    
+
+  return system_settings_form($form);
+}
+}

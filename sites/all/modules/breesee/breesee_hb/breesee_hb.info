@@ -1,0 +1,7 @@
+; $Id: breesee_hb.info $
+name = Bresee Heartbeat
+description = Bresee Heartbeat. Manage all user activity
+core = 6.x
+package = Breesee
+dependencies[] = breesee
+dependencies[] = heartbeat

@@ -1,0 +1,161 @@
+/* $Id: fancy_login.css,v 1.9 2011/01/25 05:49:48 hakulicious Exp $ */
+
+div#fancy_login_login_box
+{
+	display:none;
+	-moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -khtml-border-radius: 5px;
+}
+
+#fancy_login_close_button
+{
+    background: url("../images/close.gif") no-repeat scroll 0 0 transparent;
+    display: block;
+    height: 20px;
+    margin: 9px 9px 2px 0.5em;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 23px;
+}
+
+#fancy_login_close_button:hover
+{
+	text-decoration:none;
+	background-color:#FFF;
+	color:#F00;
+}
+
+#fancy_login_login_box #edit-name-wrapper
+{
+	margin-top:0;
+	clear:both
+}
+#fancy_login_login_box #edit-name-wrapper {
+    clear: both;
+    margin-top: 0;
+    padding: 0 0 8px;
+}
+#fancy_login_form_contents #edit-name-wrapper label{
+	    color: #000000;
+    font: 12px arial;
+}
+#fancy_login_form_contents #edit-name-wrapper input{
+    border-color: #BDBDBD;
+    width: 210px;
+}
+#fancy_login_form_contents #edit-pass-wrapper label{
+	    color: #000000;
+    font: 12px arial;
+}
+#fancy_login_form_contents #edit-pass-wrapper input{
+    border-color: #BDBDBD;
+    width: 210px;
+}
+#fancy_login_form_contents #edit-submit-2{
+    background: none repeat scroll 0 0 #95CD36;
+    border: 1px solid #94B683;
+    border-radius: 2px 2px 2px 2px;
+    color: #FFFFFF;
+    margin: 10px 0 0;
+    padding: 4px 0;
+    width: 218px;
+}
+
+#fancy_login_form_contents .edit-submit-2 {
+	-moz-box-shadow:inset 0px 1px 0px 0px #a4e271;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #a4e271;
+	box-shadow:inset 0px 1px 0px 0px #a4e271;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #89c403), color-stop(1, #77a809) );
+	background:-moz-linear-gradient( center top, #89c403 5%, #77a809 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#89c403', endColorstr='#77a809');
+	background-color:#89c403;
+	-moz-border-radius:1px;
+	-webkit-border-radius:1px;
+	border-radius:1px;
+	border:1px solid #74b807;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Georgia;
+	font-size:14px;
+	font-weight:bold;
+	padding:5px 58px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #76b510;
+}#fancy_login_form_contents .edit-submit-2:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #77a809), color-stop(1, #89c403) );
+	background:-moz-linear-gradient( center top, #77a809 5%, #89c403 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#77a809', endColorstr='#89c403');
+	background-color:#77a809;
+}#fancy_login_form_contents .edit-submit-2:active {
+	position:relative;
+	top:1px;
+}
+
+#fancy_login_form_contents .item-list{
+    padding: 10px 0 0;
+}
+#fancy_login_form_contents .item-list ul .first{
+    padding: 0px 0 10px 0;
+}
+#fancy_login_form_contents .item-list ul li{
+	margin:0px !important;
+}
+#fancy_login_form_contents .item-list ul li a{
+	color:#55A4F2;
+}
+#fancy_login_ajax_loader
+{
+	display:none;
+}
+
+#ssl_icon
+{
+	float:right;
+	position:relative;
+	height:50px;
+	width:50px;
+}
+
+#ssl_icon:hover #ssl_login_popup
+{
+	display:block;
+}
+
+#ssl_icon img
+{
+	margin:0;
+	padding:0;
+}
+
+#ssl_login_popup
+{
+	height:75px;
+	width:100px;
+	position:absolute;
+	bottom:32px;
+	right:-84px;
+	display:none;
+	background:url(../images/popup.png) no-repeat transparent;
+}
+
+#ssl_login_popup p
+{
+	margin-top:75px;
+	height:0;
+	line-height:normal;
+	overflow:hidden;
+}
+
+.ssl_icon_above .form-text
+{
+	width:100px;
+}
+
+
+#fancy_login_form_contents {
+	padding:10px 15px 10px 40px;
+}
+
