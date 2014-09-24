@@ -17,7 +17,8 @@ if (arg(2)) { ?>
 			$terms = taxonomy_node_get_terms_by_vocabulary($udet_prof, 27, $key = 'tid');
   ?>
   <li>
-   <a href="<?php print $base_url.'/'.drupal_get_path_alias('user/'.$uid); ?>"><?php  print theme('imagecache', 'store_list', $udet->picture);  ?></a>
+<!--   <a href="--><?php //print $base_url.'/'.drupal_get_path_alias('user/'.$uid); ?><!--">--><?php // print theme('imagecache', 'store_list', $udet->picture);  ?><!--</a>-->
+      <a href="<?php print $base_url.'/'.drupal_get_path_alias('user/'.$uid); ?>"><img width="241px" height="178px" src ="<?php print $base_url.'/'. $udet->picture;  ?>"></a>
     <div class="place_name_red"><?php foreach($terms as $term){
 echo $term->name;
 } ?></div>

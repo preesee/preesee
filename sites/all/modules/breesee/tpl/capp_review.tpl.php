@@ -382,7 +382,7 @@ drupal_set_title('Thank You');
                         </div><!--------[Application cover text closed here]---------->
                         
                         <p>
-                            If you have problems or questions regarding the application of creator account, please email <a href="#">info@breesee.com</a> and we will get back to you.
+                            If you have problems or questions regarding the application of creator account, please email <a href="#">info@preesee.com</a> and we will get back to you.
                             Thank you for your patience.
                         </p>
                         <div class="goto_your_step4_btn"><!-----[goto your profile starts-here]---->

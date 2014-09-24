@@ -73,12 +73,12 @@ print drupal_render($form['form_token']);
                             <span class="text_ptag">
                             	<p>
                                		Once you set your creator name, you will not be able to change it again. 
-For more information, please read breesee's <a href="#">application policy</a>. 
+For more information, please read Preesee's <a href="#">application policy</a>.
                             </p>
                             </span>
                         </div>
                         
-                        <h2>Your Personal URL: http://www.thebreesee.com/creator/<span id="url">Your Name</span></h2>
+                        <h2>Your Personal URL: http://www.preesee.com/creator/<span id="url">Your Name</span></h2>
                         <p>Your URL will NOT be active until your creator application is approved.</p>
                         
                     </div><!-----[Warning block closed-here]---->

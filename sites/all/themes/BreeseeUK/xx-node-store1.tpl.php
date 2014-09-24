@@ -77,7 +77,7 @@ For more information, please read breesee's<a href="#">application policy</a>.
                             </span>
                         </div>
                         
-                        <h2>Your Personal URL: http://www.thebreesee.com/store/<spanv id="url">Your Name</span></h2>
+                        <h2>Your Personal URL: http://www.preesee.com/store/<span id="url">Your Name</span></h2>
                         <p>Your URL will NOT be active until your store application is approved.</p>
                         
                     </div><!-----[Warning block closed-here]---->

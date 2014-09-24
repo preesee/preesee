@@ -1290,23 +1290,15 @@ function breesee_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 			}
 
 			if ($node->type == 'creators'){
-			  $profile = (in_array('audience',$user->roles))?content_profile_load('audience', $user->uid):content_profile_load('store', $user->uid);
-				foreach($profile->taxonomy as $key => $val){
-					   $node->taxonomy[13] = ($val->vid == 13) ? $val->tid : '';
-						 $tid_city = ($val->vid == 27) ? $val->tid : '';
-						 $node->taxonomy[27][$tid_city] = $tid_city;
-        }
+                $node->taxonomy[13]=$node->field_new_country[0]['value'];          // issue 74 henry.hua 20140917
+                $node->taxonomy[27]=$node->field_ncity[0]['value'];
 				$node->status = 0;
 				node_save($node);
 				drupal_get_messages(NULL,TRUE);
 			}
 			if ($node->type == 'store'){
-			$profile =(in_array('audience',$user->roles))?content_profile_load('audience', $user->uid):content_profile_load('creators', $user->uid);
-				foreach($profile->taxonomy as $key => $val){
-					   $node->taxonomy[13] = ($val->vid == 13) ? $val->tid : '';
-						 $tid_city = ($val->vid == 27) ? $val->tid : '';
-						 $node->taxonomy[27][$tid_city] = $tid_city;
-        }
+                $node->taxonomy[13]=$node->field_new_country[0]['value'];           // issue 74 henry.hua 20140917
+                $node->taxonomy[27]=$node->field_ncity[0]['value'];
 				$node->status = 0;
 				node_save($node);
 				drupal_get_messages($type = NULL, $clear_queue = TRUE);
@@ -3974,7 +3966,6 @@ function breesee_custom_user_profileedit() {
             $tid_city=$f_val;
             if($t_val!=null)
             {
-                //$t_valt= $node->$fname;
                 $t_valt=$t_val[0]->tid;                                                           // henry. hua  2014/8/14
                 $node->$fname = array(array('value' => $t_valt));
             }
@@ -3992,10 +3983,16 @@ function breesee_custom_user_profileedit() {
 
 
         }
+        else if ($fname=="field_new_country")
+       {
+           $node->taxonomy[13]=$f_val;//$node->field_new_country[0]['value'];
+           $node->$fname = array(array('value' => $f_val));
+        }
         else if($fname=="language")
         {
             $node->$fname = $f_val;
-        }else if ($fname != "title"){
+        }
+        else if ($fname != "title"){
 			$node->$fname = array(array('value' => $f_val));
         }
 		else

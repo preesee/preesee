@@ -86,7 +86,7 @@ For more information, please read preesee &prime; s <a href="#">application poli
                             </span>
                         </div>
                         
-                        <h2>Your Personal URL: <a href="#">http://www.thebreesee.com/creator/<span id="srurl"></span></a></h2>
+                        <h2>Your Personal URL: <a href="#">http://www.preesee.com/creator/<span id="srurl"></span></a></h2>
                         <p>Your URL will NOT be active until your creator application is approved.</p>
                         
                     </div><!-----[Warning block closed-here]---->

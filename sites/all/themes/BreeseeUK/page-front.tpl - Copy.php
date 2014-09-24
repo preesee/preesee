@@ -185,10 +185,10 @@ var base_url = '<?php echo $base_url; ?>';
     	<ul>
             <li class="left_footer"><!-----[footer-left-starts-here]---->
 								<?php print $footer_lmenu;  ?>
-                <p>Copyright @ 2010 Breesee Inc. All right Reserved </p>
+                <p>Copyright @ 2014 Preesee Inc. All right Reserved </p>
             </li><!-----[footer-left-closed-here]---->
             <li class="right_footer"><!-----[footer-right-starts-here]---->
-              <p>Take a breesee and share with friends</p>
+              <p>Take a Preesee and share with friends</p>
               <div class="social">
               	<?php print $footer_social;  ?>
               </div>  

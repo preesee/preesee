@@ -157,7 +157,7 @@ print drupal_render($form['submit']);
 to explore creative communities around the world. If you did not receive any confirmatiion email from us, click to <a href="#">resend</a> the confirmation email.
             </p>
             <p>
-            If you have problems or questions regarding the registration for breesee Account, please email <a href="#">info@breesee.com</a> and we will get back to you.
+            If you have problems or questions regarding the registration for breesee Account, please email <a href="#">info@preesee.com</a> and we will get back to you.
             </p>
             <h3>Local Stores near you</h3>
             <ul>
@@ -236,12 +236,12 @@ $form['account']['pass']['pass2']['#value'] = '123456';
                             <span class="text_ptag">
                             	<p>
                                		Once you set your creator name, you will not be able to change it again. 
-For more information, please read breesee's <a href="#">application policy</a>. 
+For more information, please read Preesee's <a href="#">application policy</a>.
                             </p>
                             </span>
                         </div>
                         
-                        <h2>Your Personal URL: http://www.thebreesee.com/creator/<span id="url">Your Name</span></h2>
+                        <h2>Your Personal URL: http://www.preesee.com/creator/<span id="url">Your Name</span></h2>
                         <p>Your URL will NOT be active until your creator application is approved.</p>
                         
                     </div><!-----[Warning block closed-here]---->
@@ -561,12 +561,12 @@ $form['account']['pass']['pass2']['#value'] = '123456';
                             <span class="text_ptag">
                             	<p>
                                		Once you set your store name, you will not be able to change it again. 
-For more information, please read breesee's<a href="#">application policy</a>. 
+For more information, please read Preesee's<a href="#">application policy</a>.
                                 </p>
                             </span>
                         </div>
                         
-                        <h2>Your Personal URL: http://www.thebreesee.com/store/<span id="url">Your Name</span></h2>
+                        <h2>Your Personal URL: http://www.preesee.com/store/<span id="url">Your Name</span></h2>
                         <p>Your URL will NOT be active until your store application is approved.</p>
                         
                     </div><!-----[Warning block closed-here]---->

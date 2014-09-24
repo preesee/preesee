@@ -294,7 +294,19 @@ var base_url = '<?php echo $base_url; ?>';
       </div>
 <?php if($right != ''):  ?>
         <div class="right_category"><!-----[right-container-closed-here]---->
-        	<?php print $right; ?>        </div>
+        	<?php print $right; ?>
+
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- preesee200 -->
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:200px;height:200px"
+                 data-ad-client="ca-pub-7427292104545097"
+                 data-ad-slot="4699320368"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+
+        </div>
    <!-----[right-container-closed-here]---->
        <?php endif; ?> 
     </div>
