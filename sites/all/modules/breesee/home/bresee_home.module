@@ -82,10 +82,10 @@ function bresee_home_block($op = 'list', $delta = 0) {
     return $block;
     case 'view':
       switch ($delta) {
-        case 0:
-          $block['subject'] = t('Blog Filter by Location');
-          $block['content'] = bresee_home_nologin_location_menu();
-        	break;     
+//        case 0:                  // remove where filter on home page
+//          $block['subject'] = t('Blog Filter by Location');
+//          $block['content'] = bresee_home_nologin_location_menu();
+//        	break;
 				case 1:
           $block['subject'] = t('No Login Left News Block');
           $block['content'] = bresee_home_nologin_left_news();
