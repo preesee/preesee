@@ -261,31 +261,7 @@ switch($rolk) {
       <td align="left" valign="top">&nbsp;</td>
   </tr>
 
-  <tr>
-      <td>Home Town</td>
-  </tr>
-   <tr>
-    <td align="right" valign="middle"><span class="style1">Country</span></td>
-    <td valign="middle" class="edit_value"><?php echo $form['field_new_country']['value']['#options'][$form['field_new_country']['#value']['value']]; ?></td>
-    <td valign="middle"><a href="javascript:void(0);" class="editinline">Edit</a></td>
-  </tr>
-   <tr class="hiddentd">
-     <td align="right" valign="middle">&nbsp;</td>
-     <td valign="middle"><?php echo drupal_render($form['field_new_country']); ?><a href="javascript:void(0);" class="i_edit_op">Save</a><a href="javascript:void(0);" class="i_cancel">Cancel</a></td>
-     <td valign="middle">&nbsp;</td>
-   </tr>
-  <tr>
-      <td align="right" valign="middle"><span class="style1">City</span></td>
-      <td valign="middle" class="edit_value"><?php print $form['field_city']['#value']['value']; ?>
-      </td>
-      <td valign="middle"><a href="javascript:void(0);" class="editinline">Edit</a></td>
-  </tr>
 
-  <tr class="hiddentd">
-      <td align="right" valign="middle">&nbsp;</td>
-      <td valign="middle"><?php echo drupal_render($form['field_city']); ?><a href="javascript:void(0);" class="i_edit">Save</a><a href="javascript:void(0);" class="i_cancel">Cancel</a></td>
-      <td valign="middle">&nbsp;</td>
-  </tr>
   <tr>
       <td>Current Location</td>
   </tr>
@@ -310,6 +286,32 @@ switch($rolk) {
   <tr class="hiddentd">
       <td align="right" valign="middle">&nbsp;</td>
       <td valign="middle"><?php echo drupal_render($form['field_current_city']); ?><a href="javascript:void(0);" class="i_edit">Save</a><a href="javascript:void(0);" class="i_cancel">Cancel</a></td>
+      <td valign="middle">&nbsp;</td>
+  </tr>
+
+    <tr>
+      <td>Home Town</td>
+  </tr>
+   <tr>
+    <td align="right" valign="middle"><span class="style1">Country</span></td>
+    <td valign="middle" class="edit_value"><?php echo $form['field_new_country']['value']['#options'][$form['field_new_country']['#value']['value']]; ?></td>
+    <td valign="middle"><a href="javascript:void(0);" class="editinline">Edit</a></td>
+  </tr>
+   <tr class="hiddentd">
+     <td align="right" valign="middle">&nbsp;</td>
+     <td valign="middle"><?php echo drupal_render($form['field_new_country']); ?><a href="javascript:void(0);" class="i_edit_op">Save</a><a href="javascript:void(0);" class="i_cancel">Cancel</a></td>
+     <td valign="middle">&nbsp;</td>
+   </tr>
+  <tr>
+      <td align="right" valign="middle"><span class="style1">City</span></td>
+      <td valign="middle" class="edit_value"><?php print $form['field_city']['#value']['value']; ?>
+      </td>
+      <td valign="middle"><a href="javascript:void(0);" class="editinline">Edit</a></td>
+  </tr>
+
+  <tr class="hiddentd">
+      <td align="right" valign="middle">&nbsp;</td>
+      <td valign="middle"><?php echo drupal_render($form['field_city']); ?><a href="javascript:void(0);" class="i_edit">Save</a><a href="javascript:void(0);" class="i_cancel">Cancel</a></td>
       <td valign="middle">&nbsp;</td>
   </tr>
 <!--   <tr>-->
@@ -1039,6 +1041,7 @@ $(document).ready( function () {
 </script>
 
 <script type="text/javascript">
+console.log(999999999999999999)
 $(document).ready(function(){
 $('#upload_img').axuploader({
   url: Drupal.settings.breesee.base_url + '/breesee/ajax_image_upload',

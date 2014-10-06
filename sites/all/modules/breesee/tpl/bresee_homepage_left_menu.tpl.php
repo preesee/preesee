@@ -26,7 +26,7 @@ $role_arr = $user->roles;
 	
 ?>
 <div class="<?php echo $css_class; ?>"> 
-<div class="pro_cate" id="left_menu_one">
+<div class="pro_cate" style="margin-left:5px" id="left_menu_one">
             	<div class="pro_top_cat"></div>
                 <div class="pro_middle_cat">
                 	<div class="pro_my_account">
@@ -106,7 +106,7 @@ $role_arr = $user->roles;
                  <ul class="pro_cat_block_1">
                             <a class="pro" href="<?php echo $base_url;?>/user/settings">
                                 <li>
-                                  <img src="<?php echo $base_url.'/sites/all/themes/BreeseeUK/images/city_login_page/icon_set1_img5.png'; ?>" />
+                                  <img src="<?php echo $base_url.'/sites/all/themes/BreeseeUK/images/city_login_page/icon_set1_img6.png'; ?>" />
                                     <h1>My Settings</h1>
                                     <p>My Profile Settings</p>
                                 </li>
