@@ -828,6 +828,7 @@ $('.editinline').click(function() {
 
 
 $(document).ready( function () {
+  $('#edit-field-intro-0-value-wrapper').css({'marginLeft':'3%'});
 		$('a.i_edit').click(function() {
 			var element = $(this).parent().children('div').children(':input');
             var editValue=$(this).parent().parent().prev().children('.edit_value');  // add by henry.hua
